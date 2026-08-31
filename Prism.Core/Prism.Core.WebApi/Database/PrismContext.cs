@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Prism.Core.WebApi.Converters;
 using Prism.Core.WebApi.Models;
+using System.Drawing;
 
 namespace Prism.Core.WebApi.Database;
 
@@ -26,4 +28,12 @@ public class PrismContext : DbContext
     public DbSet<UserRate> UserRates { get; set; }
 
     public DbSet<Rate> Rates { get; set; }
+
+    public PrismContext(DbContextOptions<PrismContext> options)
+        : base(options) { }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(PrismContext).Assembly);
+    }
 }
