@@ -4,7 +4,7 @@ public class RecordValue
 {
     public Guid Id { get; set; }
 
-    public Guid IdRecord { get; set; }
+    public Guid RecordId { get; set; }
 
-    public Guid IdThemeField { get; set; }
+    public Guid ThemeFieldId { get; set; }
 }

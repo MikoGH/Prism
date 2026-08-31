@@ -6,7 +6,7 @@ public class ThemeField
 {
     public Guid Id { get; set; }
 
-    public Guid IdTheme { get; set; }
+    public Guid ThemeId { get; set; }
 
     public FieldType Type { get; set; }
 

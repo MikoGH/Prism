@@ -6,9 +6,9 @@ public class ThemeFieldVersion
 {
     public Guid Id { get; set; }
 
-    public Guid IdThemeField { get; set; }
+    public Guid ThemeFieldId { get; set; }
 
-    public Guid IdUser { get; set; }
+    public Guid UserId { get; set; }
 
     public DateTime WriteDate { get; set; }
 

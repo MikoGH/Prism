@@ -4,5 +4,5 @@ public class Record
 {
     public Guid Id { get; set; }
 
-    public Guid IdTheme { get; set; }
+    public Guid ThemeId { get; set; }
 }

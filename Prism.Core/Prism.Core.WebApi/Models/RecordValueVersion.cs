@@ -4,9 +4,9 @@ public class RecordValueVersion
 {
     public Guid Id { get; set; }
 
-    public Guid IdRecordValue { get; set; }
+    public Guid RecordValueId { get; set; }
 
-    public Guid IdUser { get; set; }
+    public Guid UserId { get; set; }
 
     public DateTime WriteDate { get; set; }
 

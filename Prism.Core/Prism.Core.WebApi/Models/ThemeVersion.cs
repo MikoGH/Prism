@@ -4,9 +4,9 @@ public class ThemeVersion
 {
     public Guid Id { get; set; }
 
-    public Guid IdTheme { get; set; }
+    public Guid ThemeId { get; set; }
 
-    public Guid IdUser { get; set; }
+    public Guid UserId { get; set; }
 
     public DateTime WriteDate { get; set; }
 
