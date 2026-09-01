@@ -1,5 +1,6 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using Prism.Core.WebApi.Constants;
+using Prism.Core.WebApi.Exceptions;
 using Prism.Core.WebApi.Models;
 using Prism.Core.WebApi.Models.Enums;
 using Prism.Core.WebApi.Repositories.Abstractions;
@@ -25,11 +26,11 @@ public class AuthService : IAuthService
     {
         var user = await _userRepository.FirstOrDefaultAsync(x => x.Name == authUser.Name, token);
         if (user is null)
-            return null;
+            throw new AuthException($"User with name {authUser.Name} does not exist.");
 
         bool isValid = BCrypt.Net.BCrypt.Verify(authUser.Password, user.PasswordHash);
         if (!isValid)
-            return null;
+            throw new AuthException("Incorrect password.");
 
         return GenerateJwtToken(user);
     }
@@ -37,14 +38,10 @@ public class AuthService : IAuthService
     public async Task<bool> RegisterAsync(RegisterUser registerUser, CancellationToken token)
     {
         if (!CheckPasswordRepeatEquals(registerUser.Password, registerUser.PasswordRepeat, token))
-        {
-            // error
-        }
+            throw new AuthException("Passwords are not equal.");
 
         if (await CheckUserExistsAsync(registerUser.Name, token))
-        {
-            // error
-        }
+            throw new AuthException($"User with name {registerUser.Name} already exists.");
 
         string hashedPassword = BCrypt.Net.BCrypt.HashPassword(registerUser.Password);
 
@@ -79,9 +76,9 @@ public class AuthService : IAuthService
     private string GenerateJwtToken(User user)
     {
         var jwtSecretKey = _configuration[AppConstants.JwtSecretKeySectionName];
-        if (_configuration[AppConstants.JwtSecretKeySectionName] is null)
+        if (jwtSecretKey is null)
         {
-            // error
+            throw new EmptyConfigurationSectionException("Jwt configuration does not set in appsettings.");
         }
 
         var tokenHandler = new JwtSecurityTokenHandler();

@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Net;
 
 namespace Prism.Core.WebApi.Middlewares;
 
@@ -20,18 +21,20 @@ public class ExceptionMiddleware
         {
             await _next(httpContext);
         }
+        catch (ValidationException ex)
+        {
+            await HandleExceptionAsync(httpContext, ex, HttpStatusCode.BadRequest);
+        }
         catch (Exception ex)
         {
-            httpContext.Items.TryAdd("LoggedException", ex);
-            _logger.LogError(new EventId(ex.HResult), ex, ex.ToString());
-            await HandleExceptionAsync(httpContext, ex);
+            await HandleExceptionAsync(httpContext, ex, HttpStatusCode.InternalServerError);
         }
     }
 
-    private Task HandleExceptionAsync(HttpContext httpContext, Exception ex)
+    private Task HandleExceptionAsync(HttpContext httpContext, Exception ex, HttpStatusCode statusCode)
     {
-        _logger.LogError(ex, "Exception occured");
-        HttpStatusCode statusCode = HttpStatusCode.InternalServerError;
+        httpContext.Items.TryAdd("LoggedException", ex);
+        _logger.LogError(new EventId(ex.HResult), ex, ex.ToString());
         return WriteJsonContentAsync(httpContext, statusCode, ex.Message);
     }
 
