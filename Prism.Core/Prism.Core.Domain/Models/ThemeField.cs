@@ -9,6 +9,4 @@ public class ThemeField
     public Guid ThemeId { get; set; }
 
     public FieldType Type { get; set; }
-
-    public bool IsDeleted { get; set; }
 }

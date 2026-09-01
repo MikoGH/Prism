@@ -18,4 +18,6 @@ public class ThemeFieldVersion
     public int Priority { get; set; }
 
     public string Name { get; set; }
+
+    public bool IsDeleted { get; set; }
 }

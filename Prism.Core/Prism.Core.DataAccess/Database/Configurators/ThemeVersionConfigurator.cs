@@ -20,6 +20,7 @@ public class ThemeVersionConfigurator : IEntityTypeConfiguration<ThemeVersion>
             .HasColumnName(DbConstants.ColumnNames.Name)
             .HasMaxLength(DbConstants.ColumnSettings.DefaultNameMaxLength)
             .IsRequired();
+        builder.Property(x => x.IsDeleted).HasColumnName(DbConstants.ColumnNames.IsDeleted).IsRequired();
 
         builder.HasKey(x => x.Id);
     }

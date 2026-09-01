@@ -14,7 +14,6 @@ public class ThemeFieldConfigurator : IEntityTypeConfiguration<ThemeField>
         builder.Property(x => x.Id).HasColumnName(DbConstants.ColumnNames.Id).IsRequired().ValueGeneratedOnAdd();
         builder.Property(x => x.ThemeId).HasColumnName(DbConstants.ColumnNames.ThemeId).IsRequired();
         builder.Property(x => x.Type).HasColumnName(DbConstants.ColumnNames.Type).IsRequired();
-        builder.Property(x => x.IsDeleted).HasColumnName(DbConstants.ColumnNames.IsDeleted).IsRequired();
 
         builder.HasKey(x => x.Id);
     }
