@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Prism.Core.WebApi.Database;
@@ -11,9 +12,11 @@ using Prism.Core.WebApi.Database;
 namespace Prism.Core.WebApi.Migrations
 {
     [DbContext(typeof(PrismContext))]
-    partial class PrismContextModelSnapshot : ModelSnapshot
+    [Migration("20260901085932_m003_RenameUserPasswordToPasswordHash")]
+    partial class m003_RenameUserPasswordToPasswordHash
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

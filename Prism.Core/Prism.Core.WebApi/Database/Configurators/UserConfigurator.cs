@@ -14,7 +14,7 @@ public class UserConfigurator : IEntityTypeConfiguration<User>
         builder.Property(x => x.Id).HasColumnName(DbConstants.ColumnNames.Id).IsRequired().ValueGeneratedOnAdd();
         builder.Property(x => x.Role).HasColumnName(DbConstants.ColumnNames.Role).IsRequired();
         builder.Property(x => x.Name).HasColumnName(DbConstants.ColumnNames.Name).IsRequired();
-        builder.Property(x => x.Password).HasColumnName(DbConstants.ColumnNames.Password).IsRequired();
+        builder.Property(x => x.PasswordHash).HasColumnName(DbConstants.ColumnNames.Password).IsRequired();
 
         builder.HasKey(x => x.Id);
     }
