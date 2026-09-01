@@ -47,7 +47,7 @@ public static class DbConstants
 
         public const string ImageUrl = "image_url";
 
-        public const string Password = "password";
+        public const string Password = "password_hash";
 
         public const string Priority = "priority";
 
