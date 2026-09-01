@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Npgsql;
-using Prism.Core.WebApi.Database;
+using Prism.Core.DataAccess.Database;
 
 namespace Prism.Core.WebApi.Extensions;
 

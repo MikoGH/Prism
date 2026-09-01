@@ -20,10 +20,12 @@
     <PackageReference Include="Monq.Core.MvcExtensions" Version="4.1.0" />
     <PackageReference Include="Monq.Core.Paging" Version="5.1.0" />
     <PackageReference Include="Monq.Core.Paging.Models" Version="5.0.0" />
-    <PackageReference Include="Npgsql" Version="10.0.3" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.3" />
     <PackageReference Include="Riok.Mapperly" Version="4.3.1" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.22.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Prism.Core.DataAccess\Prism.Core.DataAccess.csproj" />
   </ItemGroup>
 
 </Project>

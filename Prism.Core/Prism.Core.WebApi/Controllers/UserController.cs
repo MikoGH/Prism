@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Monq.Core.Paging.Models;
+using Prism.Core.Domain.Contracts;
+using Prism.Core.Domain.Models.Filters;
 using Prism.Core.WebApi.Constants;
 using Prism.Core.WebApi.Dtos.User;
 using Prism.Core.WebApi.Mappers;
-using Prism.Core.WebApi.Models.Filters;
-using Prism.Core.WebApi.Repositories.Abstractions;
 
 namespace Prism.Core.WebApi.Controllers;
 

@@ -1,3 +1,5 @@
 <Solution>
+  <Project Path="Prism.Core.DataAccess/Prism.Core.DataAccess.csproj" Id="76be2648-facc-4357-b6e2-8d88b96615ab" />
+  <Project Path="Prism.Core.Domain/Prism.Core.Domain.csproj" Id="f1563949-6c96-414f-82db-884286854f6c" />
   <Project Path="Prism.Core.WebApi/Prism.Core.WebApi.csproj" />
 </Solution>

@@ -2,7 +2,7 @@
 using Prism.Core.WebApi.Constants;
 using Prism.Core.WebApi.Dtos.Auth;
 using Prism.Core.WebApi.Mappers;
-using Prism.Core.WebApi.Services.Abstractions;
+using Prism.Core.WebApi.Services.Contracts;
 
 namespace Prism.Core.WebApi.Controllers;
 

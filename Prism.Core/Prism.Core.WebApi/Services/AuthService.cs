@@ -1,10 +1,11 @@
 ﻿using Microsoft.IdentityModel.Tokens;
+using Prism.Core.Domain.Contracts;
+using Prism.Core.Domain.Models;
+using Prism.Core.Domain.Models.Enums;
 using Prism.Core.WebApi.Constants;
 using Prism.Core.WebApi.Exceptions;
 using Prism.Core.WebApi.Models;
-using Prism.Core.WebApi.Models.Enums;
-using Prism.Core.WebApi.Repositories.Abstractions;
-using Prism.Core.WebApi.Services.Abstractions;
+using Prism.Core.WebApi.Services.Contracts;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;

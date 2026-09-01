@@ -1,5 +1,5 @@
-﻿using Prism.Core.WebApi.Dtos.Rate;
-using Prism.Core.WebApi.Models;
+﻿using Prism.Core.Domain.Models;
+using Prism.Core.WebApi.Dtos.Rate;
 using Riok.Mapperly.Abstractions;
 
 namespace Prism.Core.WebApi.Mappers;

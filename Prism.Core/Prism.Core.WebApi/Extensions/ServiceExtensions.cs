@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Prism.Core.DataAccess.Repositories;
+using Prism.Core.Domain.Contracts;
 using Prism.Core.WebApi.Mappers;
-using Prism.Core.WebApi.Repositories;
-using Prism.Core.WebApi.Repositories.Abstractions;
 using Prism.Core.WebApi.Services;
-using Prism.Core.WebApi.Services.Abstractions;
+using Prism.Core.WebApi.Services.Contracts;
 using System.Text;
 
 namespace Prism.Core.WebApi.Extensions;
