@@ -14,8 +14,10 @@ public class RateRepository : IRateRepository
         _context = context;
     }
 
-    public IEnumerable<Rate> GetAllRates(CancellationToken token)
+    public async Task<IEnumerable<Rate>> GetAllAsync(CancellationToken token)
     {
-        return _context.Rates.AsNoTracking().ToList();
+        var rates = await _context.Rates.AsNoTracking().ToListAsync(token);
+
+        return rates;
     }
 }

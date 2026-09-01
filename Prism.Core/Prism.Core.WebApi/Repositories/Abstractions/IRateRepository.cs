@@ -4,5 +4,5 @@ namespace Prism.Core.WebApi.Repositories.Abstractions;
 
 public interface IRateRepository
 {
-    public IEnumerable<Rate> GetAllRates(CancellationToken token);
+    public Task<IEnumerable<Rate>> GetAllAsync(CancellationToken token);
 }
