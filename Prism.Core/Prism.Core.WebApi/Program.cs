@@ -22,6 +22,7 @@ builder.Services.AddLogging();
 builder.Services.AddRepositories();
 builder.Services.AddServices();
 builder.Services.AddMappers();
+builder.Services.AddPrismAuthentication(builder.Configuration.GetValue<string>(AppConstants.JwtSecretKeySectionName));
 
 var app = builder.Build();
 
@@ -32,6 +33,8 @@ app.UseCors(options => options
 app.UseRouting();
 app.MapControllers();
 app.UseMiddleware<ExceptionMiddleware>();
+app.UseAuthentication();
+app.UseAuthorization();
 
 await app.MigrateDatabaseAsync();
 

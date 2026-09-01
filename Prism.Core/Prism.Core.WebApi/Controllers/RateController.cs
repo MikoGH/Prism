@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Prism.Core.WebApi.Constants;
 using Prism.Core.WebApi.Dtos.Rate;
@@ -8,6 +9,7 @@ namespace Prism.Core.WebApi.Controllers;
 
 [Controller]
 [Route($"{AppConstants.RoutePrefix}/[controller]")]
+[Authorize]
 public class RateController : ControllerBase
 {
     private readonly RateMapper _mapper;
