@@ -19,8 +19,9 @@ builder.Services.AddControllers()
 builder.Services.AddPostgresDbContext(builder.Configuration.GetConnectionString(AppConstants.PostgresConnectionStringSectionName));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddLogging();
-builder.Services.AddServices();
 builder.Services.AddRepositories();
+builder.Services.AddServices();
+builder.Services.AddMappers();
 
 var app = builder.Build();
 
