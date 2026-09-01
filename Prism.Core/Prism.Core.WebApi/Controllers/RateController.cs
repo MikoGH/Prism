@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Prism.Core.WebApi.Constants;
-using Prism.Core.WebApi.Models;
+using Prism.Core.WebApi.Dtos.Rate;
+using Prism.Core.WebApi.Mappers;
 using Prism.Core.WebApi.Repositories.Abstractions;
 
 namespace Prism.Core.WebApi.Controllers;
@@ -9,18 +10,22 @@ namespace Prism.Core.WebApi.Controllers;
 [Route($"{AppConstants.RoutePrefix}/[controller]")]
 public class RateController : ControllerBase
 {
+    private readonly RateMapper _mapper;
     private readonly IRateRepository _rateRepository;
 
-    public RateController(IRateRepository rateRepository)
+    public RateController(RateMapper mapper, IRateRepository rateRepository)
     {
+        _mapper = mapper;
         _rateRepository = rateRepository;
     }
 
     [HttpGet()]
-    public async Task<ActionResult<IEnumerable<Rate>>> GetRates(CancellationToken token)
+    public async Task<ActionResult<IEnumerable<RateDto>>> GetAllRatesAsync(CancellationToken token)
     {
-        var rates = _rateRepository.GetAllRates(token);
+        var rates = await _rateRepository.GetAllAsync(token);
 
-        return Ok(rates);
+        var rateDtos = rates.Select(x => _mapper.ToRateDto(x)).ToList();
+
+        return Ok(rateDtos);
     }
 }
