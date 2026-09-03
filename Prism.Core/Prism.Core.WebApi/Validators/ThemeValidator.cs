@@ -21,7 +21,7 @@ public class ThemeValidator : IThemeValidator
             throw new EntityNotFoundException("Theme version does not exist.");
 
         // REM: changed by single IsAccepted only if new version has true, old version - false
-        if ((themeVersion.IsAccepted || !lastThemeVersion.IsAccepted)
+        if ((!themeVersion.IsAccepted || lastThemeVersion.IsAccepted)
             && themeVersion.Name == lastThemeVersion.Name
             && themeVersion.IsDeleted == lastThemeVersion.IsDeleted)
         {
