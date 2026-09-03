@@ -1,5 +1,6 @@
 ﻿using Prism.Core.Domain.Contracts;
 using Prism.Core.Domain.Models;
+using Prism.Core.WebApi.Exceptions;
 using Prism.Core.WebApi.Validators.Contracts;
 
 namespace Prism.Core.WebApi.Validators;
@@ -17,7 +18,7 @@ public class ThemeValidator : IThemeValidator
     {
         var lastThemeVersion = await _themeVersionRepository.FirstOrDefaultActualAsync(x => x.ThemeId == themeVersion.ThemeId, token: token);
         if (lastThemeVersion is null)
-            throw new Exception("Theme version does not exist.");  // TODO: add custom exception
+            throw new EntityNotFoundException("Theme version does not exist.");
 
         // REM: changed by single IsAccepted only if new version has true, old version - false
         if ((themeVersion.IsAccepted || !lastThemeVersion.IsAccepted)

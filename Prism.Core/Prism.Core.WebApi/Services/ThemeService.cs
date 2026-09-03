@@ -4,8 +4,10 @@ using Prism.Core.Domain.Models;
 using Prism.Core.Domain.Models.Enums;
 using Prism.Core.Domain.Models.Filters;
 using Prism.Core.Domain.Models.Includes;
+using Prism.Core.WebApi.Exceptions;
 using Prism.Core.WebApi.Services.Contracts;
 using Prism.Core.WebApi.Validators.Contracts;
+using System.ComponentModel.DataAnnotations;
 
 namespace Prism.Core.WebApi.Services;
 
@@ -56,14 +58,14 @@ public class ThemeService : IThemeService
     {
         var theme = await GetOrAddTheme(themeVersion, token);
         if (theme is null)
-            throw new ArgumentException("Theme does not exist and was not given to add.");  // TODO: add custom exception
+            throw new ValidationException("Theme does not exist and was not given to add.");
 
         themeVersion.ThemeId = theme.Id;
         themeVersion.WriteDate = DateTime.UtcNow;
 
         var user = await _userRepository.GetByIdAsync(themeVersion.UserCreateId, token);
         if (user is null)
-            throw new ArgumentException("User does not exist.");  // TODO: add custom exception
+            throw new EntityNotFoundException("User does not exist.");
 
         if (user.Role is Role.Moderator or Role.Admin)
         {
@@ -84,7 +86,7 @@ public class ThemeService : IThemeService
     {
         var lastThemeVersion = await _themeVersionRepository.FirstOrDefaultActualAsync(x => x.ThemeId == themeId, token: token);
         if (lastThemeVersion is null)
-            throw new Exception("Theme version does not exist.");  // TODO: add custom exception
+            throw new EntityNotFoundException("Theme version does not exist.");
 
         var themeVersion = new ThemeVersion
         {
@@ -97,7 +99,7 @@ public class ThemeService : IThemeService
 
         var user = await _userRepository.GetByIdAsync(userId, token);
         if (user is null)
-            throw new ArgumentException("User does not exist.");  // TODO: add custom exception
+            throw new EntityNotFoundException("User does not exist.");
 
         if (user.Role is Role.Moderator or Role.Admin)
         {
