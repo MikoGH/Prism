@@ -58,7 +58,7 @@ public class ThemeService : IThemeService
     {
         var theme = await GetOrAddTheme(themeVersion, token);
         if (theme is null)
-            throw new ValidationException("Theme does not exist and was not given to add.");
+            throw new EntityNotFoundException("Theme does not exist and was not given to add.");
 
         themeVersion.ThemeId = theme.Id;
         themeVersion.WriteDate = DateTime.UtcNow;
