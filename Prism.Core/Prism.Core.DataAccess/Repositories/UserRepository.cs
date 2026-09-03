@@ -19,18 +19,22 @@ public class UserRepository : IUserRepository
         _context = context;
     }
 
-    public async Task<IEnumerable<User>> FilterAsync(PagingModel paging, UserFilter filter, CancellationToken token)
+    public async Task<IEnumerable<User>> FilterAsync(UserFilter filter, PagingModel? paging = null, CancellationToken token = default)
     {
-        var users = await _context.Users
+        var query = _context.Users
             .AsNoTracking()
-            .FilterBy(filter)
-            .WithPaging(paging, null, x => x.Name)
+            .FilterBy(filter);
+
+        if (paging is not null)
+            query = query.WithPaging(paging, null, x => x.Name);
+
+        var users = await query
             .ToListAsync(token);
 
         return users;
     }
 
-    public Task<User?> FirstOrDefaultAsync(Expression<Func<User, bool>> predicate, CancellationToken token)
+    public Task<User?> FirstOrDefaultAsync(Expression<Func<User, bool>> predicate, CancellationToken token = default)
     {
         var user = _context.Users
             .AsNoTracking()
@@ -40,20 +44,20 @@ public class UserRepository : IUserRepository
         return user;
     }
 
-    public Task<User?> GetAsync(Guid id, CancellationToken token)
+    public Task<User?> GetByIdAsync(Guid id, CancellationToken token = default)
     {
         return _context.Users.FirstOrDefaultAsync(x => x.Id == id, token);
     }
 
-    public async Task<User?> AddAsync(User user, CancellationToken token)
+    public async Task<User?> AddAsync(User user, CancellationToken token = default)
     {
-        var addedUser = await _context.AddAsync(user, token);
+        var addedUser = await _context.Users.AddAsync(user, token);
         await _context.SaveChangesAsync(token);
 
         return addedUser.Entity;
     }
 
-    public async Task<User?> UpdateAsync(Guid id, User user, CancellationToken token)
+    public async Task<User?> UpdateAsync(Guid id, User user, CancellationToken token = default)
     {
         var existingUser = await _context.Users.FirstOrDefaultAsync(x => x.Id == id, token);
 
@@ -70,7 +74,7 @@ public class UserRepository : IUserRepository
         return existingUser;
     }
 
-    public async Task<bool> DeleteAsync(Guid id, CancellationToken token)
+    public async Task<bool> DeleteAsync(Guid id, CancellationToken token = default)
     {
         var existingUser = await _context.Users.FirstOrDefaultAsync(x => x.Id == id, token);
 

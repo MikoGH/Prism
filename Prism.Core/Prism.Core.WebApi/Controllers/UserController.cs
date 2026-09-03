@@ -28,7 +28,7 @@ public class UserController : ControllerBase
         [FromBody] UserFilter filter,
         CancellationToken token)
     {
-        var users = await _userRepository.FilterAsync(paging, filter, token);
+        var users = await _userRepository.FilterAsync(filter, paging, token);
 
         var userDtos = users.Select(x => _mapper.ToUserDto(x)).ToList();
 
