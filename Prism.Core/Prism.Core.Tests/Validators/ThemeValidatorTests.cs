@@ -173,9 +173,10 @@ public class ThemeValidatorTests
 
         var themeValidator = new ThemeValidator(themeVersionRepositoryMock.Object);
 
-        // Act/Assert
-        var exception = await Assert.ThrowsAsync<EntityNotFoundException>(
-            () => themeValidator.HasChanges(themeVersion, CancellationToken.None)
-        );
+        // Act
+        var result = await themeValidator.HasChanges(themeVersion, CancellationToken.None);
+
+        // Assert
+        Assert.True(result);
     }
 }

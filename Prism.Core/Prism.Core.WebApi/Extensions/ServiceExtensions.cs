@@ -1,11 +1,10 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using Prism.Core.DataAccess.Repositories;
+﻿using Prism.Core.DataAccess.Repositories;
 using Prism.Core.Domain.Contracts;
 using Prism.Core.WebApi.Mappers;
 using Prism.Core.WebApi.Services;
 using Prism.Core.WebApi.Services.Contracts;
-using System.Text;
+using Prism.Core.WebApi.Validators;
+using Prism.Core.WebApi.Validators.Contracts;
 
 namespace Prism.Core.WebApi.Extensions;
 
@@ -15,6 +14,10 @@ public static class ServiceExtensions
     {
         services.AddScoped<IRateRepository, RateRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IThemeRepository, ThemeRepository>();
+        services.AddScoped<IThemeVersionRepository, ThemeVersionRepository>();
+        services.AddScoped<IThemeFieldRepository, ThemeFieldRepository>();
+        services.AddScoped<IThemeFieldVersionRepository, ThemeFieldVersionRepository>();
 
         return services;
     }
@@ -22,6 +25,8 @@ public static class ServiceExtensions
     public static IServiceCollection AddServices(this IServiceCollection services)
     {
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IThemeValidator, ThemeValidator>();
+        services.AddScoped<IThemeService, ThemeService>();
 
         return services;
     }
@@ -32,33 +37,7 @@ public static class ServiceExtensions
         services.AddScoped<RegisterMapper>();
         services.AddScoped<UserMapper>();
         services.AddScoped<RateMapper>();
-
-        return services;
-    }
-
-    public static IServiceCollection AddPrismAuthentication(this IServiceCollection services, string? secretKey)
-    {
-        if (string.IsNullOrEmpty(secretKey) || secretKey.Length < 32)
-            throw new Exception("JWT Secret Key must be at least 32 characters long.");
-        var key = Encoding.ASCII.GetBytes(secretKey);
-
-        services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
-                    ValidateLifetime = true,
-                    ClockSkew = TimeSpan.Zero
-                };
-            });
+        services.AddScoped<ThemeMapper>();
 
         return services;
     }

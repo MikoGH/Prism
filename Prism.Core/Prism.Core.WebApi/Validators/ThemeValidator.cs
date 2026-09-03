@@ -18,7 +18,7 @@ public class ThemeValidator : IThemeValidator
     {
         var lastThemeVersion = await _themeVersionRepository.FirstOrDefaultActualAsync(x => x.ThemeId == themeVersion.ThemeId, token: token);
         if (lastThemeVersion is null)
-            throw new EntityNotFoundException("Theme version does not exist.");
+            return true;
 
         // REM: changed by single IsAccepted only if new version has true, old version - false
         if ((!themeVersion.IsAccepted || lastThemeVersion.IsAccepted)
