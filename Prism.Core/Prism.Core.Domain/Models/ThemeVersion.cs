@@ -5,8 +5,13 @@ public class ThemeVersion
     public Guid Id { get; set; }
 
     public Guid ThemeId { get; set; }
+    public Theme? Theme { get; set; }
 
-    public Guid UserId { get; set; }
+    public Guid UserCreateId { get; set; }
+    public User? UserCreate { get; set; }
+
+    public Guid? UserAcceptId { get; set; }
+    public User? UserAccept { get; set; }
 
     public DateTime WriteDate { get; set; }
 

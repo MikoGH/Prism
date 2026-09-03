@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Prism.Core.DataAccess.Database;
@@ -11,9 +12,11 @@ using Prism.Core.DataAccess.Database;
 namespace Prism.Core.DataAccess.Migrations
 {
     [DbContext(typeof(PrismContext))]
-    partial class PrismContextModelSnapshot : ModelSnapshot
+    [Migration("20260902101956_m004_AddUserCreateAndUserAccept")]
+    partial class m004_AddUserCreateAndUserAccept
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -131,8 +134,6 @@ namespace Prism.Core.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ThemeId");
-
                     b.ToTable("records", (string)null);
                 });
 
@@ -152,10 +153,6 @@ namespace Prism.Core.DataAccess.Migrations
                         .HasColumnName("theme_field_id");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("RecordId");
-
-                    b.HasIndex("ThemeFieldId");
 
                     b.ToTable("record_values", (string)null);
                 });
@@ -195,7 +192,7 @@ namespace Prism.Core.DataAccess.Migrations
                         .HasColumnType("text")
                         .HasColumnName("string_value");
 
-                    b.Property<Guid?>("UserAcceptId")
+                    b.Property<Guid>("UserAcceptId")
                         .HasColumnType("uuid")
                         .HasColumnName("user_accept_id");
 
@@ -242,7 +239,7 @@ namespace Prism.Core.DataAccess.Migrations
                     b.Property<Guid>("RecordId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("UserAcceptId")
+                    b.Property<Guid>("UserAcceptId")
                         .HasColumnType("uuid")
                         .HasColumnName("user_accept_id");
 
@@ -294,8 +291,6 @@ namespace Prism.Core.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ThemeId");
-
                     b.ToTable("theme_fields", (string)null);
                 });
 
@@ -327,7 +322,7 @@ namespace Prism.Core.DataAccess.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("theme_field_id");
 
-                    b.Property<Guid?>("UserAcceptId")
+                    b.Property<Guid>("UserAcceptId")
                         .HasColumnType("uuid")
                         .HasColumnName("user_accept_id");
 
@@ -375,7 +370,7 @@ namespace Prism.Core.DataAccess.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("theme_id");
 
-                    b.Property<Guid?>("UserAcceptId")
+                    b.Property<Guid>("UserAcceptId")
                         .HasColumnType("uuid")
                         .HasColumnName("user_accept_id");
 
@@ -445,43 +440,7 @@ namespace Prism.Core.DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RateId");
-
-                    b.HasIndex("RecordId");
-
-                    b.HasIndex("UserId");
-
                     b.ToTable("user_rates", (string)null);
-                });
-
-            modelBuilder.Entity("Prism.Core.Domain.Models.Record", b =>
-                {
-                    b.HasOne("Prism.Core.Domain.Models.Theme", "Theme")
-                        .WithMany()
-                        .HasForeignKey("ThemeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Theme");
-                });
-
-            modelBuilder.Entity("Prism.Core.Domain.Models.RecordValue", b =>
-                {
-                    b.HasOne("Prism.Core.Domain.Models.Record", "Record")
-                        .WithMany()
-                        .HasForeignKey("RecordId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Prism.Core.Domain.Models.ThemeField", "ThemeField")
-                        .WithMany()
-                        .HasForeignKey("ThemeFieldId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Record");
-
-                    b.Navigation("ThemeField");
                 });
 
             modelBuilder.Entity("Prism.Core.Domain.Models.RecordValueVersion", b =>
@@ -494,7 +453,9 @@ namespace Prism.Core.DataAccess.Migrations
 
                     b.HasOne("Prism.Core.Domain.Models.User", "UserAccept")
                         .WithMany()
-                        .HasForeignKey("UserAcceptId");
+                        .HasForeignKey("UserAcceptId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Prism.Core.Domain.Models.User", "UserCreate")
                         .WithMany()
@@ -519,7 +480,9 @@ namespace Prism.Core.DataAccess.Migrations
 
                     b.HasOne("Prism.Core.Domain.Models.User", "UserAccept")
                         .WithMany()
-                        .HasForeignKey("UserAcceptId");
+                        .HasForeignKey("UserAcceptId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Prism.Core.Domain.Models.User", "UserCreate")
                         .WithMany()
@@ -534,17 +497,6 @@ namespace Prism.Core.DataAccess.Migrations
                     b.Navigation("UserCreate");
                 });
 
-            modelBuilder.Entity("Prism.Core.Domain.Models.ThemeField", b =>
-                {
-                    b.HasOne("Prism.Core.Domain.Models.Theme", "Theme")
-                        .WithMany()
-                        .HasForeignKey("ThemeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Theme");
-                });
-
             modelBuilder.Entity("Prism.Core.Domain.Models.ThemeFieldVersion", b =>
                 {
                     b.HasOne("Prism.Core.Domain.Models.ThemeField", "ThemeField")
@@ -555,7 +507,9 @@ namespace Prism.Core.DataAccess.Migrations
 
                     b.HasOne("Prism.Core.Domain.Models.User", "UserAccept")
                         .WithMany()
-                        .HasForeignKey("UserAcceptId");
+                        .HasForeignKey("UserAcceptId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Prism.Core.Domain.Models.User", "UserCreate")
                         .WithMany()
@@ -580,7 +534,9 @@ namespace Prism.Core.DataAccess.Migrations
 
                     b.HasOne("Prism.Core.Domain.Models.User", "UserAccept")
                         .WithMany()
-                        .HasForeignKey("UserAcceptId");
+                        .HasForeignKey("UserAcceptId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Prism.Core.Domain.Models.User", "UserCreate")
                         .WithMany()
@@ -593,33 +549,6 @@ namespace Prism.Core.DataAccess.Migrations
                     b.Navigation("UserAccept");
 
                     b.Navigation("UserCreate");
-                });
-
-            modelBuilder.Entity("Prism.Core.Domain.Models.UserRate", b =>
-                {
-                    b.HasOne("Prism.Core.Domain.Models.Rate", "Rate")
-                        .WithMany()
-                        .HasForeignKey("RateId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Prism.Core.Domain.Models.Record", "Record")
-                        .WithMany()
-                        .HasForeignKey("RecordId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Prism.Core.Domain.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Rate");
-
-                    b.Navigation("Record");
-
-                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }

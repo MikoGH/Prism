@@ -7,8 +7,13 @@ public class ThemeFieldVersion
     public Guid Id { get; set; }
 
     public Guid ThemeFieldId { get; set; }
+    public ThemeField? ThemeField { get; set; }
 
-    public Guid UserId { get; set; }
+    public Guid UserCreateId { get; set; }
+    public User? UserCreate { get; set; }
+
+    public Guid? UserAcceptId { get; set; }
+    public User? UserAccept { get; set; }
 
     public DateTime WriteDate { get; set; }
 

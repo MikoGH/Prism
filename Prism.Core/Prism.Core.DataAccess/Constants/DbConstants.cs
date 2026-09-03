@@ -33,6 +33,10 @@ public static class DbConstants
 
         public const string UserId = "user_id";
 
+        public const string UserCreateId = "user_create_id";
+
+        public const string UserAcceptId = "user_accept_id";
+
         public const string ThemeId = "theme_id";
 
         public const string ThemeFieldId = "theme_field_id";
