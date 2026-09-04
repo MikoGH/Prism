@@ -1,33 +1,20 @@
-﻿using Prism.Core.Domain.Contracts;
-using Prism.Core.Domain.Models;
-using Prism.Core.WebApi.Exceptions;
+﻿using Prism.Core.Domain.Models;
+using Prism.Core.WebApi.Models;
 using Prism.Core.WebApi.Validators.Contracts;
 
 namespace Prism.Core.WebApi.Validators;
 
 public class ThemeValidator : IThemeValidator
 {
-    private readonly IThemeVersionRepository _themeVersionRepository;
-
-    public ThemeValidator(IThemeVersionRepository themeVersionRepository)
+    public ValidationResult Validate(ThemeVersion themeVersion)
     {
-        _themeVersionRepository = themeVersionRepository;
-    }
+        var validationResult = new ValidationResult();
+        if (themeVersion.Theme is not null
+            && themeVersion.Theme.Id != Guid.Empty
+            && themeVersion.ThemeId != Guid.Empty
+            && themeVersion.Theme.Id != themeVersion.ThemeId)
+            validationResult.AddErrorMessage("ThemeVersion.ThemeId and ThemeVersion.Theme.Id differs.");
 
-    public async Task<bool> HasChanges(ThemeVersion themeVersion, CancellationToken token)
-    {
-        var lastThemeVersion = await _themeVersionRepository.FirstOrDefaultActualAsync(x => x.ThemeId == themeVersion.ThemeId, token: token);
-        if (lastThemeVersion is null)
-            return true;
-
-        // REM: changed by single IsAccepted only if new version has true, old version - false
-        if ((!themeVersion.IsAccepted || lastThemeVersion.IsAccepted)
-            && themeVersion.Name == lastThemeVersion.Name
-            && themeVersion.IsDeleted == lastThemeVersion.IsDeleted)
-        {
-            return false;
-        }
-
-        return true;
+        return validationResult;
     }
 }

@@ -1,10 +1,13 @@
 ﻿using Moq;
 using Prism.Core.Domain.Contracts;
 using Prism.Core.Domain.Models;
+using Prism.Core.Domain.Models.Includes;
 using Prism.Core.Tests.Helpers;
 using Prism.Core.WebApi.Exceptions;
+using Prism.Core.WebApi.Models;
 using Prism.Core.WebApi.Services;
 using Prism.Core.WebApi.Validators.Contracts;
+using System.Linq.Expressions;
 
 namespace Prism.Core.Tests.Services;
 
@@ -27,7 +30,15 @@ public class ThemeServiceTests
 
         var theme = ModelGenerator.GenerateTheme(sporadic);
         var themeVersion = ModelGenerator.GenerateThemeVersion(sporadic);
+        var lastThemeVersion = ModelGenerator.GenerateThemeVersion(sporadic);
         var user = ModelGenerator.GenerateUser(sporadic);
+        var validationResult = new ValidationResult();
+
+        themeVersionRepositoryMock.Setup(x => x.FirstOrDefaultActualAsync(
+            It.IsAny<Expression<Func<ThemeVersion, bool>>>(),
+            It.IsAny<ThemeVersionInclude>(),
+            It.IsAny<CancellationToken>())
+        ).ReturnsAsync(lastThemeVersion);
 
         themeRepositoryMock.Setup(x => x.GetByIdAsync(
             It.IsAny<Guid>(),
@@ -39,10 +50,9 @@ public class ThemeServiceTests
             It.IsAny<CancellationToken>())
         ).ReturnsAsync(user);
 
-        themeValidatorMock.Setup(x => x.HasChanges(
-            It.IsAny<ThemeVersion>(),
-            It.IsAny<CancellationToken>())
-        ).ReturnsAsync(true);
+        themeValidatorMock.Setup(x => x.Validate(
+            It.IsAny<ThemeVersion>())
+        ).Returns(validationResult);
 
         var themeService = new ThemeService(themeValidatorMock.Object, themeRepositoryMock.Object, themeVersionRepositoryMock.Object, userRepositoryMock.Object);
 
@@ -89,7 +99,15 @@ public class ThemeServiceTests
         theme.Id = default;
         themeVersion.Theme = theme;
         themeVersion.ThemeId = default;
+        var lastThemeVersion = ModelGenerator.GenerateThemeVersion(sporadic);
         var user = ModelGenerator.GenerateUser(sporadic);
+        var validationResult = new ValidationResult();
+
+        themeVersionRepositoryMock.Setup(x => x.FirstOrDefaultActualAsync(
+            It.IsAny<Expression<Func<ThemeVersion, bool>>>(),
+            It.IsAny<ThemeVersionInclude>(),
+            It.IsAny<CancellationToken>())
+        ).ReturnsAsync(lastThemeVersion);
 
         themeRepositoryMock.Setup(x => x.AddAsync(
             It.IsAny<Theme>(),
@@ -101,10 +119,9 @@ public class ThemeServiceTests
             It.IsAny<CancellationToken>())
         ).ReturnsAsync(user);
 
-        themeValidatorMock.Setup(x => x.HasChanges(
-            It.IsAny<ThemeVersion>(),
-            It.IsAny<CancellationToken>())
-        ).ReturnsAsync(true);
+        themeValidatorMock.Setup(x => x.Validate(
+            It.IsAny<ThemeVersion>())
+        ).Returns(validationResult);
 
         var themeService = new ThemeService(themeValidatorMock.Object, themeRepositoryMock.Object, themeVersionRepositoryMock.Object, userRepositoryMock.Object);
 
@@ -115,12 +132,6 @@ public class ThemeServiceTests
         themeVersionRepositoryMock.Verify(
             x => x.AddAsync(
                 It.IsAny<ThemeVersion>(),
-                It.IsAny<CancellationToken>()),
-            Times.Once);
-
-        themeRepositoryMock.Verify(
-            x => x.AddAsync(
-                It.IsAny<Theme>(),
                 It.IsAny<CancellationToken>()),
             Times.Once);
 
@@ -145,20 +156,27 @@ public class ThemeServiceTests
         var themeRepositoryMock = new Mock<IThemeRepository>();
         var themeVersionRepositoryMock = new Mock<IThemeVersionRepository>();
         var userRepositoryMock = new Mock<IUserRepository>();
+        var validationResult = new ValidationResult();
 
         var themeVersion = ModelGenerator.GenerateThemeVersion(sporadic);
         themeVersion.ThemeId = default;
+        var lastThemeVersion = ModelGenerator.GenerateThemeVersion(sporadic);
         var user = ModelGenerator.GenerateUser(sporadic);
+
+        themeVersionRepositoryMock.Setup(x => x.FirstOrDefaultActualAsync(
+            It.IsAny<Expression<Func<ThemeVersion, bool>>>(),
+            It.IsAny<ThemeVersionInclude>(),
+            It.IsAny<CancellationToken>())
+        ).ReturnsAsync(lastThemeVersion);
 
         userRepositoryMock.Setup(x => x.GetByIdAsync(
             It.IsAny<Guid>(),
             It.IsAny<CancellationToken>())
         ).ReturnsAsync(user);
 
-        themeValidatorMock.Setup(x => x.HasChanges(
-            It.IsAny<ThemeVersion>(),
-            It.IsAny<CancellationToken>())
-        ).ReturnsAsync(true);
+        themeValidatorMock.Setup(x => x.Validate(
+            It.IsAny<ThemeVersion>())
+        ).Returns(validationResult);
 
         var themeService = new ThemeService(themeValidatorMock.Object, themeRepositoryMock.Object, themeVersionRepositoryMock.Object, userRepositoryMock.Object);
 
@@ -197,7 +215,15 @@ public class ThemeServiceTests
 
         var theme = ModelGenerator.GenerateTheme(sporadic);
         var themeVersion = ModelGenerator.GenerateThemeVersion(sporadic);
+        var lastThemeVersion = ModelGenerator.GenerateThemeVersion(sporadic);
         var user = ModelGenerator.GenerateUser(sporadic);
+        var validationResult = new ValidationResult();
+
+        themeVersionRepositoryMock.Setup(x => x.FirstOrDefaultActualAsync(
+            It.IsAny<Expression<Func<ThemeVersion, bool>>>(),
+            It.IsAny<ThemeVersionInclude>(),
+            It.IsAny<CancellationToken>())
+        ).ReturnsAsync(lastThemeVersion);
 
         themeRepositoryMock.Setup(x => x.GetByIdAsync(
             It.IsAny<Guid>(),
@@ -209,10 +235,9 @@ public class ThemeServiceTests
             It.IsAny<CancellationToken>())
         ).ReturnsAsync((User?)null);
 
-        themeValidatorMock.Setup(x => x.HasChanges(
-            It.IsAny<ThemeVersion>(),
-            It.IsAny<CancellationToken>())
-        ).ReturnsAsync(true);
+        themeValidatorMock.Setup(x => x.Validate(
+            It.IsAny<ThemeVersion>())
+        ).Returns(validationResult);
 
         var themeService = new ThemeService(themeValidatorMock.Object, themeRepositoryMock.Object, themeVersionRepositoryMock.Object, userRepositoryMock.Object);
 
@@ -238,12 +263,18 @@ public class ThemeServiceTests
 
         var theme = ModelGenerator.GenerateTheme(sporadic);
         var themeVersion = ModelGenerator.GenerateThemeVersion(sporadic);
-        themeVersion.Theme = theme;
-        themeVersion.ThemeId = default;
+        var lastThemeVersion = themeVersion;
         var user = ModelGenerator.GenerateUser(sporadic);
+        var validationResult = new ValidationResult();
 
-        themeRepositoryMock.Setup(x => x.AddAsync(
-            It.IsAny<Theme>(),
+        themeVersionRepositoryMock.Setup(x => x.FirstOrDefaultActualAsync(
+            It.IsAny<Expression<Func<ThemeVersion, bool>>>(),
+            It.IsAny<ThemeVersionInclude>(),
+            It.IsAny<CancellationToken>())
+        ).ReturnsAsync(lastThemeVersion);
+
+        themeRepositoryMock.Setup(x => x.GetByIdAsync(
+            It.IsAny<Guid>(),
             It.IsAny<CancellationToken>())
         ).ReturnsAsync(theme);
 
@@ -252,10 +283,9 @@ public class ThemeServiceTests
             It.IsAny<CancellationToken>())
         ).ReturnsAsync(user);
 
-        themeValidatorMock.Setup(x => x.HasChanges(
-            It.IsAny<ThemeVersion>(),
-            It.IsAny<CancellationToken>())
-        ).ReturnsAsync(false);
+        themeValidatorMock.Setup(x => x.Validate(
+            It.IsAny<ThemeVersion>())
+        ).Returns(validationResult);
 
         var themeService = new ThemeService(themeValidatorMock.Object, themeRepositoryMock.Object, themeVersionRepositoryMock.Object, userRepositoryMock.Object);
 
@@ -268,5 +298,189 @@ public class ThemeServiceTests
                 It.IsAny<ThemeVersion>(),
                 It.IsAny<CancellationToken>()),
             Times.Never);
+    }
+
+    [Theory(DisplayName = "HasChanges returns expected result when changed.")]
+    [InlineData(sbyte.MaxValue)]
+    [InlineData(byte.MaxValue)]
+    [InlineData(short.MaxValue)]
+    [InlineData(ushort.MaxValue)]
+    public async Task HasChanges_ReturnsExpectedResult_WhenChanged(int seed)
+    {
+        var sporadic = new Random(seed);
+
+        // Arrange
+        var themeValidatorMock = new Mock<IThemeValidator>();
+        var themeRepositoryMock = new Mock<IThemeRepository>();
+        var themeVersionRepositoryMock = new Mock<IThemeVersionRepository>();
+        var userRepositoryMock = new Mock<IUserRepository>();
+
+        var themeVersion = ModelGenerator.GenerateThemeVersion(sporadic);
+        var lastThemeVersion = ModelGenerator.GenerateThemeVersion(sporadic);
+
+        themeVersionRepositoryMock.Setup(x => x.FirstOrDefaultActualAsync(
+            It.IsAny<Expression<Func<ThemeVersion, bool>>>(),
+            It.IsAny<ThemeVersionInclude>(),
+            It.IsAny<CancellationToken>())
+        ).ReturnsAsync(lastThemeVersion);
+
+        var themeService = new ThemeService(themeValidatorMock.Object, themeRepositoryMock.Object, themeVersionRepositoryMock.Object, userRepositoryMock.Object);
+
+        // Act
+        var result = await themeService.HasChangesAsync(themeVersion, CancellationToken.None);
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Theory(DisplayName = "HasChanges returns expected result when did not changed.")]
+    [InlineData(sbyte.MaxValue)]
+    [InlineData(byte.MaxValue)]
+    [InlineData(short.MaxValue)]
+    [InlineData(ushort.MaxValue)]
+    public async Task HasChanges_ReturnsExpectedResult_WhenNotChanged(int seed)
+    {
+        var sporadic = new Random(seed);
+
+        // Arrange
+        var themeValidatorMock = new Mock<IThemeValidator>();
+        var themeRepositoryMock = new Mock<IThemeRepository>();
+        var themeVersionRepositoryMock = new Mock<IThemeVersionRepository>();
+        var userRepositoryMock = new Mock<IUserRepository>();
+
+        var themeVersion = ModelGenerator.GenerateThemeVersion(sporadic);
+        var lastThemeVersion = ModelGenerator.GenerateThemeVersion(sporadic);
+
+        themeVersion.ThemeId = lastThemeVersion.ThemeId;
+        themeVersion.Name = lastThemeVersion.Name;
+        themeVersion.UserCreateId = lastThemeVersion.UserCreateId;
+        themeVersion.IsAccepted = lastThemeVersion.IsAccepted;
+        themeVersion.IsDeleted = lastThemeVersion.IsDeleted;
+
+        themeVersionRepositoryMock.Setup(x => x.FirstOrDefaultActualAsync(
+            It.IsAny<Expression<Func<ThemeVersion, bool>>>(),
+            It.IsAny<ThemeVersionInclude>(),
+            It.IsAny<CancellationToken>())
+        ).ReturnsAsync(lastThemeVersion);
+
+        var themeService = new ThemeService(themeValidatorMock.Object, themeRepositoryMock.Object, themeVersionRepositoryMock.Object, userRepositoryMock.Object);
+
+        // Act
+        var result = await themeService.HasChangesAsync(themeVersion, CancellationToken.None);
+
+        // Assert
+        Assert.False(result);
+    }
+
+    [Theory(DisplayName = "HasChanges returns expected result when is accepted was changed to true.")]
+    [InlineData(sbyte.MaxValue)]
+    [InlineData(byte.MaxValue)]
+    [InlineData(short.MaxValue)]
+    [InlineData(ushort.MaxValue)]
+    public async Task HasChanges_ReturnsExpectedResult_WhenIsAcceptedChangedToTrue(int seed)
+    {
+        var sporadic = new Random(seed);
+
+        // Arrange
+        var themeValidatorMock = new Mock<IThemeValidator>();
+        var themeRepositoryMock = new Mock<IThemeRepository>();
+        var themeVersionRepositoryMock = new Mock<IThemeVersionRepository>();
+        var userRepositoryMock = new Mock<IUserRepository>();
+
+        var themeVersion = ModelGenerator.GenerateThemeVersion(sporadic);
+        var lastThemeVersion = ModelGenerator.GenerateThemeVersion(sporadic);
+
+        themeVersion.ThemeId = lastThemeVersion.ThemeId;
+        themeVersion.Name = lastThemeVersion.Name;
+        themeVersion.UserCreateId = lastThemeVersion.UserCreateId;
+        themeVersion.IsDeleted = lastThemeVersion.IsDeleted;
+        lastThemeVersion.IsAccepted = false;
+        themeVersion.IsAccepted = true;
+
+        themeVersionRepositoryMock.Setup(x => x.FirstOrDefaultActualAsync(
+            It.IsAny<Expression<Func<ThemeVersion, bool>>>(),
+            It.IsAny<ThemeVersionInclude>(),
+            It.IsAny<CancellationToken>())
+        ).ReturnsAsync(lastThemeVersion);
+
+        var themeService = new ThemeService(themeValidatorMock.Object, themeRepositoryMock.Object, themeVersionRepositoryMock.Object, userRepositoryMock.Object);
+
+        // Act
+        var result = await themeService.HasChangesAsync(themeVersion, CancellationToken.None);
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Theory(DisplayName = "HasChanges returns expected result when is accepted was changed to false.")]
+    [InlineData(sbyte.MaxValue)]
+    [InlineData(byte.MaxValue)]
+    [InlineData(short.MaxValue)]
+    [InlineData(ushort.MaxValue)]
+    public async Task HasChanges_ReturnsExpectedResult_WhenIsAcceptedChangedToFalse(int seed)
+    {
+        var sporadic = new Random(seed);
+
+        // Arrange
+        var themeValidatorMock = new Mock<IThemeValidator>();
+        var themeRepositoryMock = new Mock<IThemeRepository>();
+        var themeVersionRepositoryMock = new Mock<IThemeVersionRepository>();
+        var userRepositoryMock = new Mock<IUserRepository>();
+
+        var themeVersion = ModelGenerator.GenerateThemeVersion(sporadic);
+        var lastThemeVersion = ModelGenerator.GenerateThemeVersion(sporadic);
+
+        themeVersion.ThemeId = lastThemeVersion.ThemeId;
+        themeVersion.Name = lastThemeVersion.Name;
+        themeVersion.UserCreateId = lastThemeVersion.UserCreateId;
+        themeVersion.IsDeleted = lastThemeVersion.IsDeleted;
+        lastThemeVersion.IsAccepted = true;
+        themeVersion.IsAccepted = false;
+
+        themeVersionRepositoryMock.Setup(x => x.FirstOrDefaultActualAsync(
+            It.IsAny<Expression<Func<ThemeVersion, bool>>>(),
+            It.IsAny<ThemeVersionInclude>(),
+            It.IsAny<CancellationToken>())
+        ).ReturnsAsync(lastThemeVersion);
+
+        var themeService = new ThemeService(themeValidatorMock.Object, themeRepositoryMock.Object, themeVersionRepositoryMock.Object, userRepositoryMock.Object);
+
+        // Act
+        var result = await themeService.HasChangesAsync(themeVersion, CancellationToken.None);
+
+        // Assert
+        Assert.False(result);
+    }
+
+    [Theory(DisplayName = "HasChanges returns expected result when last theme version does not exist.")]
+    [InlineData(sbyte.MaxValue)]
+    [InlineData(byte.MaxValue)]
+    [InlineData(short.MaxValue)]
+    [InlineData(ushort.MaxValue)]
+    public async Task HasChanges_ReturnsExpectedResult_WhenLastThemeVersionDoesNotExist(int seed)
+    {
+        var sporadic = new Random(seed);
+
+        // Arrange
+        var themeValidatorMock = new Mock<IThemeValidator>();
+        var themeRepositoryMock = new Mock<IThemeRepository>();
+        var themeVersionRepositoryMock = new Mock<IThemeVersionRepository>();
+        var userRepositoryMock = new Mock<IUserRepository>();
+
+        var themeVersion = ModelGenerator.GenerateThemeVersion(sporadic);
+
+        themeVersionRepositoryMock.Setup(x => x.FirstOrDefaultActualAsync(
+            It.IsAny<Expression<Func<ThemeVersion, bool>>>(),
+            It.IsAny<ThemeVersionInclude>(),
+            It.IsAny<CancellationToken>())
+        ).ReturnsAsync((ThemeVersion?)null);
+
+        var themeService = new ThemeService(themeValidatorMock.Object, themeRepositoryMock.Object, themeVersionRepositoryMock.Object, userRepositoryMock.Object);
+
+        // Act
+        var result = await themeService.HasChangesAsync(themeVersion, CancellationToken.None);
+
+        // Assert
+        Assert.True(result);
     }
 }
