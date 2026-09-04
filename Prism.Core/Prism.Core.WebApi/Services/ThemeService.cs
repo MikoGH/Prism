@@ -49,14 +49,14 @@ public class ThemeService : IThemeService
         return themeVersions;
     }
 
-    public Task<ThemeVersion?> FirstOrDefaultAsync(Guid id, CancellationToken token)
+    public Task<ThemeVersion?> GetByIdAsync(Guid id, CancellationToken token)
     {
         throw new NotImplementedException();
     }
 
     public async Task<ThemeVersion?> AddAsync(ThemeVersion themeVersion, CancellationToken token)
     {
-        var theme = await GetOrAddTheme(themeVersion, token);
+        var theme = await GetOrAddThemeAsync(themeVersion, token);
         if (theme is null)
             throw new EntityNotFoundException("Theme does not exist and was not given to add.");
 
@@ -110,19 +110,19 @@ public class ThemeService : IThemeService
         return await _themeVersionRepository.AddAsync(themeVersion, token);
     }
 
-    private async ValueTask<Theme?> GetOrAddTheme(ThemeVersion themeVersion, CancellationToken token)
+    private async ValueTask<Theme?> GetOrAddThemeAsync(ThemeVersion themeVersion, CancellationToken token)
     {
-        if (themeVersion.Theme is null)
-        {
-            if (themeVersion.ThemeId == Guid.Empty)
-                return null;
-
+        if (themeVersion.ThemeId != Guid.Empty)
             return await _themeRepository.GetByIdAsync(themeVersion.ThemeId, token);
+
+        if (themeVersion.Theme is not null)
+        {
+            if (themeVersion.Theme.Id != Guid.Empty)
+                return await _themeRepository.GetByIdAsync(themeVersion.Theme.Id, token);
+
+            return await _themeRepository.AddAsync(themeVersion.Theme, token);
         }
 
-        if (themeVersion.Theme.Id == Guid.Empty)
-            return await _themeRepository.AddAsync(themeVersion.Theme, token);
-
-        return themeVersion.Theme;
+        return null;
     }
 }

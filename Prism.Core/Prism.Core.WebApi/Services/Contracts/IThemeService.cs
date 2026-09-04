@@ -10,7 +10,7 @@ public interface IThemeService
 
     public Task<IEnumerable<ThemeVersion>> FilterActualAsync(PagingModel paging, ThemeVersionFilter filter, CancellationToken token);
 
-    public Task<ThemeVersion?> FirstOrDefaultAsync(Guid id, CancellationToken token);
+    public Task<ThemeVersion?> GetByIdAsync(Guid id, CancellationToken token);
 
     public Task<ThemeVersion?> AddAsync(ThemeVersion themeVersion, CancellationToken token);
 
