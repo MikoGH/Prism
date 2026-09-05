@@ -18,6 +18,7 @@ public class RecordVersionConfigurator : IEntityTypeConfiguration<RecordVersion>
         builder.Property(x => x.IsAccepted).HasColumnName(DbConstants.ColumnNames.IsAccepted).IsRequired();
         builder.Property(x => x.Name).HasColumnName(DbConstants.ColumnNames.Name).IsRequired();
         builder.Property(x => x.ImageUrl).HasColumnName(DbConstants.ColumnNames.ImageUrl).IsRequired();
+        builder.Property(x => x.IsDeleted).HasColumnName(DbConstants.ColumnNames.IsDeleted).IsRequired();
 
         builder.HasKey(x => x.Id);
     }

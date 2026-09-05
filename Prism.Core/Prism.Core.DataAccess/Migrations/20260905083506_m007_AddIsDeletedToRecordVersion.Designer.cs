@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Prism.Core.DataAccess.Database;
@@ -11,9 +12,11 @@ using Prism.Core.DataAccess.Database;
 namespace Prism.Core.DataAccess.Migrations
 {
     [DbContext(typeof(PrismContext))]
-    partial class PrismContextModelSnapshot : ModelSnapshot
+    [Migration("20260905083506_m007_AddIsDeletedToRecordVersion")]
+    partial class m007_AddIsDeletedToRecordVersion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
