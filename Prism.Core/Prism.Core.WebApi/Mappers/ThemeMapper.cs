@@ -32,22 +32,24 @@ public partial class ThemeMapper
             themeVersion.ThemeId = (Guid)themeVersionDto.Theme.Id;
         }
 
+        if (themeVersionDto.PreviousVersionId is not null && themeVersionDto.PreviousVersionId != Guid.Empty)
+        {
+            themeVersion.PreviousVersionId = themeVersionDto.PreviousVersionId;
+        }
+
+
         themeVersion.Theme = ToTheme(themeVersionDto.Theme);
 
         return themeVersion;
     }
 
-    public ThemeField ToThemeField(UpsertThemeVersionDto themeVersionDto, UpsertThemeFieldDto themeFieldDto)
+    public ThemeField ToThemeField(UpsertThemeFieldDto themeFieldDto, Guid themeId)
     {
         var themeField = new ThemeField()
         {
-            Type = themeFieldDto.Type
+            Type = themeFieldDto.Type,
+            ThemeId = themeId
         };
-
-        if (themeVersionDto.Theme.Id is not null)
-        {
-            themeField.ThemeId = (Guid)themeVersionDto.Theme.Id;
-        }
 
         if (themeFieldDto.Id is not null)
         {
@@ -57,11 +59,11 @@ public partial class ThemeMapper
         return themeField;
     }
 
-    public ThemeFieldVersion ToThemeFieldVersion(UpsertThemeVersionDto themeVersionDto, UpsertThemeFieldVersionDto themeFieldVersionDto)
+    public ThemeFieldVersion ToThemeFieldVersion(UpsertThemeFieldVersionDto themeFieldVersionDto, Guid userId, Guid themeId)
     {
         var themeFieldVersion = new ThemeFieldVersion()
         {
-            UserCreateId = themeVersionDto.UserId,
+            UserCreateId = userId,
             Priority = themeFieldVersionDto.Priority,
             Name = themeFieldVersionDto.Name,
             IsDeleted = false,
@@ -73,7 +75,12 @@ public partial class ThemeMapper
             themeFieldVersion.ThemeFieldId = (Guid)themeFieldVersionDto.ThemeField.Id;
         }
 
-        themeFieldVersion.ThemeField = ToThemeField(themeVersionDto, themeFieldVersionDto.ThemeField);
+        if (themeFieldVersionDto.PreviousVersionId is not null && themeFieldVersionDto.PreviousVersionId != Guid.Empty)
+        {
+            themeFieldVersion.PreviousVersionId = themeFieldVersionDto.PreviousVersionId;
+        }
+
+        themeFieldVersion.ThemeField = ToThemeField(themeFieldVersionDto.ThemeField, themeId);
 
         return themeFieldVersion;
     }

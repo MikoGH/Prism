@@ -1,4 +1,5 @@
-﻿using Prism.Core.Tests.Helpers;
+﻿using Prism.Core.Domain.Models;
+using Prism.Core.Tests.Helpers;
 using Prism.Core.WebApi.Validators;
 
 namespace Prism.Core.Tests.Validators;
@@ -68,6 +69,31 @@ public class ThemeValidatorTests
         themeVersion.ThemeId = theme.Id;
         themeVersion.IsAccepted = true;
         themeVersion.IsChecked = false;
+
+        var themeValidator = new ThemeValidator();
+
+        // Act
+        var result = themeValidator.Validate(themeVersion);
+
+        // Assert
+        Assert.True(result.HasErrors);
+    }
+
+    [Theory(DisplayName = "Validate returns expected result when theme and previous theme version existence distincte.")]
+    [InlineData(sbyte.MaxValue)]
+    [InlineData(byte.MaxValue)]
+    [InlineData(short.MaxValue)]
+    [InlineData(ushort.MaxValue)]
+    public async Task Validate_ReturnsExpectedResult_WhenThemeAndPreviousThemeVersionExistenceDistinct(int seed)
+    {
+        var sporadic = new Random(seed);
+
+        // Arrange
+        var theme = ModelGenerator.GenerateTheme(sporadic);
+        var themeVersion = ModelGenerator.GenerateThemeVersion(sporadic);
+        themeVersion.Theme = theme;
+        themeVersion.ThemeId = theme.Id;
+        themeVersion.PreviousVersionId = null;
 
         var themeValidator = new ThemeValidator();
 

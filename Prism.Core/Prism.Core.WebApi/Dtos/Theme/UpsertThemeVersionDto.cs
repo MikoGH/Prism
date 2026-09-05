@@ -2,6 +2,8 @@
 
 public class UpsertThemeVersionDto
 {
+    public Guid? PreviousVersionId { get; set; }
+
     public UpsertThemeDto Theme { get; set; }
 
     public Guid UserId { get; set; }

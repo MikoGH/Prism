@@ -31,6 +31,7 @@ public class ModelGenerator
         {
             Id = RandomGenerator.GenerateGuid(sporadic),
             ThemeId = RandomGenerator.GenerateGuid(sporadic),
+            PreviousVersionId = RandomGenerator.GenerateGuid(sporadic),
             UserCreateId = RandomGenerator.GenerateGuid(sporadic),
             UserAcceptId = RandomGenerator.GenerateGuid(sporadic),
             WriteDate = RandomGenerator.GenerateDate(sporadic, 2025, 2026),

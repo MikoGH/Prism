@@ -94,7 +94,11 @@ public class ThemeService : IThemeService
 
     public async Task<bool> HasChangesAsync(ThemeVersion themeVersion, CancellationToken token)
     {
-        var lastThemeVersion = await _themeVersionRepository.FirstOrDefaultActualAsync(x => x.ThemeId == themeVersion.ThemeId, token: token);
+        var previousVersionId = themeVersion.PreviousVersionId;
+        if (previousVersionId is null || previousVersionId == Guid.Empty)
+            return true;
+
+        var lastThemeVersion = await _themeVersionRepository.GetByIdAsync((Guid)previousVersionId, token: token);
         if (lastThemeVersion is null)
             return true;
 

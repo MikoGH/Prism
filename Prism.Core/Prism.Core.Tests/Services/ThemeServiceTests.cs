@@ -31,11 +31,12 @@ public class ThemeServiceTests
         var theme = ModelGenerator.GenerateTheme(sporadic);
         var themeVersion = ModelGenerator.GenerateThemeVersion(sporadic);
         var lastThemeVersion = ModelGenerator.GenerateThemeVersion(sporadic);
+        lastThemeVersion.Id = (Guid)themeVersion.PreviousVersionId!;
         var user = ModelGenerator.GenerateUser(sporadic);
         var validationResult = new ValidationResult();
 
-        themeVersionRepositoryMock.Setup(x => x.FirstOrDefaultActualAsync(
-            It.IsAny<Expression<Func<ThemeVersion, bool>>>(),
+        themeVersionRepositoryMock.Setup(x => x.GetByIdAsync(
+            It.IsAny<Guid>(),
             It.IsAny<ThemeVersionInclude>(),
             It.IsAny<CancellationToken>())
         ).ReturnsAsync(lastThemeVersion);
@@ -100,11 +101,12 @@ public class ThemeServiceTests
         themeVersion.Theme = theme;
         themeVersion.ThemeId = default;
         var lastThemeVersion = ModelGenerator.GenerateThemeVersion(sporadic);
+        lastThemeVersion.Id = (Guid)themeVersion.PreviousVersionId!;
         var user = ModelGenerator.GenerateUser(sporadic);
         var validationResult = new ValidationResult();
 
-        themeVersionRepositoryMock.Setup(x => x.FirstOrDefaultActualAsync(
-            It.IsAny<Expression<Func<ThemeVersion, bool>>>(),
+        themeVersionRepositoryMock.Setup(x => x.GetByIdAsync(
+            It.IsAny<Guid>(),
             It.IsAny<ThemeVersionInclude>(),
             It.IsAny<CancellationToken>())
         ).ReturnsAsync(lastThemeVersion);
@@ -161,10 +163,11 @@ public class ThemeServiceTests
         var themeVersion = ModelGenerator.GenerateThemeVersion(sporadic);
         themeVersion.ThemeId = default;
         var lastThemeVersion = ModelGenerator.GenerateThemeVersion(sporadic);
+        lastThemeVersion.Id = (Guid)themeVersion.PreviousVersionId!;
         var user = ModelGenerator.GenerateUser(sporadic);
 
-        themeVersionRepositoryMock.Setup(x => x.FirstOrDefaultActualAsync(
-            It.IsAny<Expression<Func<ThemeVersion, bool>>>(),
+        themeVersionRepositoryMock.Setup(x => x.GetByIdAsync(
+            It.IsAny<Guid>(),
             It.IsAny<ThemeVersionInclude>(),
             It.IsAny<CancellationToken>())
         ).ReturnsAsync(lastThemeVersion);
@@ -216,11 +219,12 @@ public class ThemeServiceTests
         var theme = ModelGenerator.GenerateTheme(sporadic);
         var themeVersion = ModelGenerator.GenerateThemeVersion(sporadic);
         var lastThemeVersion = ModelGenerator.GenerateThemeVersion(sporadic);
+        lastThemeVersion.Id = (Guid)themeVersion.PreviousVersionId!;
         var user = ModelGenerator.GenerateUser(sporadic);
         var validationResult = new ValidationResult();
 
-        themeVersionRepositoryMock.Setup(x => x.FirstOrDefaultActualAsync(
-            It.IsAny<Expression<Func<ThemeVersion, bool>>>(),
+        themeVersionRepositoryMock.Setup(x => x.GetByIdAsync(
+            It.IsAny<Guid>(),
             It.IsAny<ThemeVersionInclude>(),
             It.IsAny<CancellationToken>())
         ).ReturnsAsync(lastThemeVersion);
@@ -264,11 +268,12 @@ public class ThemeServiceTests
         var theme = ModelGenerator.GenerateTheme(sporadic);
         var themeVersion = ModelGenerator.GenerateThemeVersion(sporadic);
         var lastThemeVersion = themeVersion;
+        lastThemeVersion.Id = (Guid)themeVersion.PreviousVersionId!;
         var user = ModelGenerator.GenerateUser(sporadic);
         var validationResult = new ValidationResult();
 
-        themeVersionRepositoryMock.Setup(x => x.FirstOrDefaultActualAsync(
-            It.IsAny<Expression<Func<ThemeVersion, bool>>>(),
+        themeVersionRepositoryMock.Setup(x => x.GetByIdAsync(
+            It.IsAny<Guid>(),
             It.IsAny<ThemeVersionInclude>(),
             It.IsAny<CancellationToken>())
         ).ReturnsAsync(lastThemeVersion);
@@ -317,9 +322,10 @@ public class ThemeServiceTests
 
         var themeVersion = ModelGenerator.GenerateThemeVersion(sporadic);
         var lastThemeVersion = ModelGenerator.GenerateThemeVersion(sporadic);
+        lastThemeVersion.Id = (Guid)themeVersion.PreviousVersionId!;
 
-        themeVersionRepositoryMock.Setup(x => x.FirstOrDefaultActualAsync(
-            It.IsAny<Expression<Func<ThemeVersion, bool>>>(),
+        themeVersionRepositoryMock.Setup(x => x.GetByIdAsync(
+            It.IsAny<Guid>(),
             It.IsAny<ThemeVersionInclude>(),
             It.IsAny<CancellationToken>())
         ).ReturnsAsync(lastThemeVersion);
@@ -350,6 +356,7 @@ public class ThemeServiceTests
 
         var themeVersion = ModelGenerator.GenerateThemeVersion(sporadic);
         var lastThemeVersion = ModelGenerator.GenerateThemeVersion(sporadic);
+        lastThemeVersion.Id = (Guid)themeVersion.PreviousVersionId!;
 
         themeVersion.ThemeId = lastThemeVersion.ThemeId;
         themeVersion.Name = lastThemeVersion.Name;
@@ -358,8 +365,8 @@ public class ThemeServiceTests
         themeVersion.IsChecked = lastThemeVersion.IsChecked;
         themeVersion.IsDeleted = lastThemeVersion.IsDeleted;
 
-        themeVersionRepositoryMock.Setup(x => x.FirstOrDefaultActualAsync(
-            It.IsAny<Expression<Func<ThemeVersion, bool>>>(),
+        themeVersionRepositoryMock.Setup(x => x.GetByIdAsync(
+            It.IsAny<Guid>(),
             It.IsAny<ThemeVersionInclude>(),
             It.IsAny<CancellationToken>())
         ).ReturnsAsync(lastThemeVersion);
@@ -390,6 +397,7 @@ public class ThemeServiceTests
 
         var themeVersion = ModelGenerator.GenerateThemeVersion(sporadic);
         var lastThemeVersion = ModelGenerator.GenerateThemeVersion(sporadic);
+        lastThemeVersion.Id = (Guid)themeVersion.PreviousVersionId!;
 
         themeVersion.ThemeId = lastThemeVersion.ThemeId;
         themeVersion.Name = lastThemeVersion.Name;
@@ -398,8 +406,8 @@ public class ThemeServiceTests
         lastThemeVersion.IsChecked = false;
         themeVersion.IsChecked = true;
 
-        themeVersionRepositoryMock.Setup(x => x.FirstOrDefaultActualAsync(
-            It.IsAny<Expression<Func<ThemeVersion, bool>>>(),
+        themeVersionRepositoryMock.Setup(x => x.GetByIdAsync(
+            It.IsAny<Guid>(),
             It.IsAny<ThemeVersionInclude>(),
             It.IsAny<CancellationToken>())
         ).ReturnsAsync(lastThemeVersion);
@@ -430,6 +438,7 @@ public class ThemeServiceTests
 
         var themeVersion = ModelGenerator.GenerateThemeVersion(sporadic);
         var lastThemeVersion = ModelGenerator.GenerateThemeVersion(sporadic);
+        lastThemeVersion.Id = (Guid)themeVersion.PreviousVersionId!;
 
         themeVersion.ThemeId = lastThemeVersion.ThemeId;
         themeVersion.Name = lastThemeVersion.Name;
@@ -438,8 +447,8 @@ public class ThemeServiceTests
         lastThemeVersion.IsChecked = true;
         themeVersion.IsChecked = false;
 
-        themeVersionRepositoryMock.Setup(x => x.FirstOrDefaultActualAsync(
-            It.IsAny<Expression<Func<ThemeVersion, bool>>>(),
+        themeVersionRepositoryMock.Setup(x => x.GetByIdAsync(
+            It.IsAny<Guid>(),
             It.IsAny<ThemeVersionInclude>(),
             It.IsAny<CancellationToken>())
         ).ReturnsAsync(lastThemeVersion);
@@ -470,6 +479,7 @@ public class ThemeServiceTests
 
         var themeVersion = ModelGenerator.GenerateThemeVersion(sporadic);
         var lastThemeVersion = ModelGenerator.GenerateThemeVersion(sporadic);
+        lastThemeVersion.Id = (Guid)themeVersion.PreviousVersionId!;
 
         themeVersion.ThemeId = lastThemeVersion.ThemeId;
         themeVersion.Name = lastThemeVersion.Name;
@@ -480,8 +490,8 @@ public class ThemeServiceTests
         lastThemeVersion.IsAccepted = true;
         themeVersion.IsAccepted = false;
 
-        themeVersionRepositoryMock.Setup(x => x.FirstOrDefaultActualAsync(
-            It.IsAny<Expression<Func<ThemeVersion, bool>>>(),
+        themeVersionRepositoryMock.Setup(x => x.GetByIdAsync(
+            It.IsAny<Guid>(),
             It.IsAny<ThemeVersionInclude>(),
             It.IsAny<CancellationToken>())
         ).ReturnsAsync(lastThemeVersion);
@@ -512,8 +522,8 @@ public class ThemeServiceTests
 
         var themeVersion = ModelGenerator.GenerateThemeVersion(sporadic);
 
-        themeVersionRepositoryMock.Setup(x => x.FirstOrDefaultActualAsync(
-            It.IsAny<Expression<Func<ThemeVersion, bool>>>(),
+        themeVersionRepositoryMock.Setup(x => x.GetByIdAsync(
+            It.IsAny<Guid>(),
             It.IsAny<ThemeVersionInclude>(),
             It.IsAny<CancellationToken>())
         ).ReturnsAsync((ThemeVersion?)null);

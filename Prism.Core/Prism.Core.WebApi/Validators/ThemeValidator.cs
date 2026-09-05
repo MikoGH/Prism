@@ -13,7 +13,10 @@ public class ThemeValidator : IThemeValidator
             && themeVersion.Theme.Id != Guid.Empty
             && themeVersion.ThemeId != Guid.Empty
             && themeVersion.Theme.Id != themeVersion.ThemeId)
-            validationResult.AddErrorMessage("ThemeVersion.ThemeId and ThemeVersion.Theme.Id differs.");
+            validationResult.AddErrorMessage("ThemeVersion.ThemeId and ThemeVersion.Theme.Id distinct.");
+
+        if ((themeVersion.ThemeId != Guid.Empty) == (themeVersion.PreviousVersionId is null))
+            validationResult.AddErrorMessage("Theme and previous theme version existence distinct.");
 
         if (!themeVersion.IsChecked && themeVersion.IsAccepted)
             validationResult.AddErrorMessage("ThemeVersion accepted but not checked.");
