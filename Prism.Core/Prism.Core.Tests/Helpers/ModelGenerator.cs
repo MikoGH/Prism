@@ -26,6 +26,7 @@ public class ModelGenerator
 
     public static ThemeVersion GenerateThemeVersion(Random sporadic)
     {
+        var isAccepted = RandomGenerator.GenerateBool(sporadic);
         return new ThemeVersion()
         {
             Id = RandomGenerator.GenerateGuid(sporadic),
@@ -33,7 +34,8 @@ public class ModelGenerator
             UserCreateId = RandomGenerator.GenerateGuid(sporadic),
             UserAcceptId = RandomGenerator.GenerateGuid(sporadic),
             WriteDate = RandomGenerator.GenerateDate(sporadic, 2025, 2026),
-            IsAccepted = RandomGenerator.GenerateBool(sporadic),
+            IsAccepted = isAccepted,
+            IsChecked = isAccepted || RandomGenerator.GenerateBool(sporadic),
             Name = RandomGenerator.GenerateString(sporadic),
             IsDeleted = RandomGenerator.GenerateBool(sporadic)
         };

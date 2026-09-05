@@ -15,6 +15,9 @@ public class ThemeValidator : IThemeValidator
             && themeVersion.Theme.Id != themeVersion.ThemeId)
             validationResult.AddErrorMessage("ThemeVersion.ThemeId and ThemeVersion.Theme.Id differs.");
 
+        if (!themeVersion.IsChecked && themeVersion.IsAccepted)
+            validationResult.AddErrorMessage("ThemeVersion accepted but not checked.");
+
         return validationResult;
     }
 }

@@ -355,6 +355,7 @@ public class ThemeServiceTests
         themeVersion.Name = lastThemeVersion.Name;
         themeVersion.UserCreateId = lastThemeVersion.UserCreateId;
         themeVersion.IsAccepted = lastThemeVersion.IsAccepted;
+        themeVersion.IsChecked = lastThemeVersion.IsChecked;
         themeVersion.IsDeleted = lastThemeVersion.IsDeleted;
 
         themeVersionRepositoryMock.Setup(x => x.FirstOrDefaultActualAsync(
@@ -372,12 +373,12 @@ public class ThemeServiceTests
         Assert.False(result);
     }
 
-    [Theory(DisplayName = "HasChanges returns expected result when is accepted was changed to true.")]
+    [Theory(DisplayName = "HasChanges returns expected result when is checked was changed to true.")]
     [InlineData(sbyte.MaxValue)]
     [InlineData(byte.MaxValue)]
     [InlineData(short.MaxValue)]
     [InlineData(ushort.MaxValue)]
-    public async Task HasChanges_ReturnsExpectedResult_WhenIsAcceptedChangedToTrue(int seed)
+    public async Task HasChanges_ReturnsExpectedResult_WhenIsCheckedChangedToTrue(int seed)
     {
         var sporadic = new Random(seed);
 
@@ -394,8 +395,8 @@ public class ThemeServiceTests
         themeVersion.Name = lastThemeVersion.Name;
         themeVersion.UserCreateId = lastThemeVersion.UserCreateId;
         themeVersion.IsDeleted = lastThemeVersion.IsDeleted;
-        lastThemeVersion.IsAccepted = false;
-        themeVersion.IsAccepted = true;
+        lastThemeVersion.IsChecked = false;
+        themeVersion.IsChecked = true;
 
         themeVersionRepositoryMock.Setup(x => x.FirstOrDefaultActualAsync(
             It.IsAny<Expression<Func<ThemeVersion, bool>>>(),
@@ -412,12 +413,12 @@ public class ThemeServiceTests
         Assert.True(result);
     }
 
-    [Theory(DisplayName = "HasChanges returns expected result when is accepted was changed to false.")]
+    [Theory(DisplayName = "HasChanges returns expected result when is checked was changed to false.")]
     [InlineData(sbyte.MaxValue)]
     [InlineData(byte.MaxValue)]
     [InlineData(short.MaxValue)]
     [InlineData(ushort.MaxValue)]
-    public async Task HasChanges_ReturnsExpectedResult_WhenIsAcceptedChangedToFalse(int seed)
+    public async Task HasChanges_ReturnsExpectedResult_WhenIsCheckedChangedToFalse(int seed)
     {
         var sporadic = new Random(seed);
 
@@ -434,6 +435,48 @@ public class ThemeServiceTests
         themeVersion.Name = lastThemeVersion.Name;
         themeVersion.UserCreateId = lastThemeVersion.UserCreateId;
         themeVersion.IsDeleted = lastThemeVersion.IsDeleted;
+        lastThemeVersion.IsChecked = true;
+        themeVersion.IsChecked = false;
+
+        themeVersionRepositoryMock.Setup(x => x.FirstOrDefaultActualAsync(
+            It.IsAny<Expression<Func<ThemeVersion, bool>>>(),
+            It.IsAny<ThemeVersionInclude>(),
+            It.IsAny<CancellationToken>())
+        ).ReturnsAsync(lastThemeVersion);
+
+        var themeService = new ThemeService(themeValidatorMock.Object, themeRepositoryMock.Object, themeVersionRepositoryMock.Object, userRepositoryMock.Object);
+
+        // Act
+        var result = await themeService.HasChangesAsync(themeVersion, CancellationToken.None);
+
+        // Assert
+        Assert.False(result);
+    }
+
+    [Theory(DisplayName = "HasChanges returns expected result when is accepted was changed.")]
+    [InlineData(sbyte.MaxValue)]
+    [InlineData(byte.MaxValue)]
+    [InlineData(short.MaxValue)]
+    [InlineData(ushort.MaxValue)]
+    public async Task HasChanges_ReturnsExpectedResult_WhenIsAcceptedChanged(int seed)
+    {
+        var sporadic = new Random(seed);
+
+        // Arrange
+        var themeValidatorMock = new Mock<IThemeValidator>();
+        var themeRepositoryMock = new Mock<IThemeRepository>();
+        var themeVersionRepositoryMock = new Mock<IThemeVersionRepository>();
+        var userRepositoryMock = new Mock<IUserRepository>();
+
+        var themeVersion = ModelGenerator.GenerateThemeVersion(sporadic);
+        var lastThemeVersion = ModelGenerator.GenerateThemeVersion(sporadic);
+
+        themeVersion.ThemeId = lastThemeVersion.ThemeId;
+        themeVersion.Name = lastThemeVersion.Name;
+        themeVersion.UserCreateId = lastThemeVersion.UserCreateId;
+        themeVersion.IsDeleted = lastThemeVersion.IsDeleted;
+        lastThemeVersion.IsChecked = true;
+        themeVersion.IsChecked = true;
         lastThemeVersion.IsAccepted = true;
         themeVersion.IsAccepted = false;
 
@@ -449,7 +492,7 @@ public class ThemeServiceTests
         var result = await themeService.HasChangesAsync(themeVersion, CancellationToken.None);
 
         // Assert
-        Assert.False(result);
+        Assert.True(result);
     }
 
     [Theory(DisplayName = "HasChanges returns expected result when last theme version does not exist.")]

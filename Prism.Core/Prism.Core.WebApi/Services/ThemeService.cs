@@ -59,14 +59,14 @@ public class ThemeService : IThemeService
 
     public async Task<ThemeVersion?> AddAsync(ThemeVersion themeVersion, CancellationToken token)
     {
-        Validate(themeVersion);
-
         var theme = await GetThemeOrThrowAsync(themeVersion, token);
         var user = await GetUserOrThrowAsync(themeVersion.UserCreateId, token);
 
         themeVersion.WriteDate = DateTime.UtcNow;
         ApplyTheme(themeVersion, theme);
         ApplyUser(themeVersion, user);
+
+        Validate(themeVersion);
 
         if (!await HasChangesAsync(themeVersion, token))
             return themeVersion;
@@ -98,8 +98,9 @@ public class ThemeService : IThemeService
         if (lastThemeVersion is null)
             return true;
 
-        // REM: changed by single IsAccepted only if new version has true, old version - false
-        return themeVersion.IsAccepted && !lastThemeVersion.IsAccepted
+        // REM: changed by single IsChecked only if new version has true, old version - false
+        return themeVersion.IsChecked && !lastThemeVersion.IsChecked
+            || themeVersion.IsChecked && themeVersion.IsAccepted != lastThemeVersion.IsAccepted
             || themeVersion.Name != lastThemeVersion.Name
             || themeVersion.IsDeleted != lastThemeVersion.IsDeleted;
     }
@@ -158,11 +159,13 @@ public class ThemeService : IThemeService
         if (IsModeratorOrAdmin(user))
         {
             themeVersion.IsAccepted = true;
+            themeVersion.IsChecked = true;
             themeVersion.UserAcceptId = user.Id;
         }
         else
         {
             themeVersion.IsAccepted = false;
+            themeVersion.IsChecked = false;
             themeVersion.UserAcceptId = null;
         }
     }
