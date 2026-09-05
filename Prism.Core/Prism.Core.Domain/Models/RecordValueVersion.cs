@@ -7,6 +7,9 @@ public class RecordValueVersion
     public Guid RecordValueId { get; set; }
     public RecordValue? RecordValue { get; set; }
 
+    public Guid? PreviousVersionId { get; set; }
+    public RecordValueVersion? PreviousVersion { get; set; }
+
     public Guid UserCreateId { get; set; }
     public User? UserCreate { get; set; }
 

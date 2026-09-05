@@ -7,6 +7,9 @@ public class ThemeVersion
     public Guid ThemeId { get; set; }
     public Theme? Theme { get; set; }
 
+    public Guid? PreviousVersionId { get; set; }
+    public ThemeVersion? PreviousVersion { get; set; }
+
     public Guid UserCreateId { get; set; }
     public User? UserCreate { get; set; }
 

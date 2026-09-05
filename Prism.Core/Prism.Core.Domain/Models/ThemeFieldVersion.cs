@@ -9,6 +9,9 @@ public class ThemeFieldVersion
     public Guid ThemeFieldId { get; set; }
     public ThemeField? ThemeField { get; set; }
 
+    public Guid? PreviousVersionId { get; set; }
+    public ThemeFieldVersion? PreviousVersion { get; set; }
+
     public Guid UserCreateId { get; set; }
     public User? UserCreate { get; set; }
 

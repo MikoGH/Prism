@@ -47,6 +47,8 @@ public static class DbConstants
 
         public const string RateId = "rate_id";
 
+        public const string PreviousVersionId = "previous_version_id";
+
         public const string Name = "name";
 
         public const string ImageUrl = "image_url";
