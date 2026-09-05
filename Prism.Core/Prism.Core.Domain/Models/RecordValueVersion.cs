@@ -17,6 +17,8 @@ public class RecordValueVersion
 
     public bool IsAccepted { get; set; }
 
+    public bool IsChecked { get; set; }
+
     public int? IntValue { get; set; }
 
     public double? DoubleValue { get; set; }

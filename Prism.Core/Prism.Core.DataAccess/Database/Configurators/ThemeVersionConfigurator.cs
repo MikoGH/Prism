@@ -17,6 +17,7 @@ public class ThemeVersionConfigurator : IEntityTypeConfiguration<ThemeVersion>
         builder.Property(x => x.UserAcceptId).HasColumnName(DbConstants.ColumnNames.UserAcceptId);
         builder.Property(x => x.WriteDate).HasColumnName(DbConstants.ColumnNames.WriteDate).IsRequired();
         builder.Property(x => x.IsAccepted).HasColumnName(DbConstants.ColumnNames.IsAccepted).IsRequired();
+        builder.Property(x => x.IsChecked).HasColumnName(DbConstants.ColumnNames.IsChecked).IsRequired();
         builder.Property(x => x.Name)
             .HasColumnName(DbConstants.ColumnNames.Name)
             .HasMaxLength(DbConstants.ColumnSettings.DefaultNameMaxLength)

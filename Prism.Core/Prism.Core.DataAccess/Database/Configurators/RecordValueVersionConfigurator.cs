@@ -17,6 +17,7 @@ public class RecordValueVersionConfigurator : IEntityTypeConfiguration<RecordVal
         builder.Property(x => x.UserAcceptId).HasColumnName(DbConstants.ColumnNames.UserAcceptId);
         builder.Property(x => x.WriteDate).HasColumnName(DbConstants.ColumnNames.WriteDate).IsRequired();
         builder.Property(x => x.IsAccepted).HasColumnName(DbConstants.ColumnNames.IsAccepted).IsRequired();
+        builder.Property(x => x.IsChecked).HasColumnName(DbConstants.ColumnNames.IsChecked).IsRequired();
         builder.Property(x => x.IntValue).HasColumnName(DbConstants.ColumnNames.IntValue);
         builder.Property(x => x.DoubleValue).HasColumnName(DbConstants.ColumnNames.DoubleValue);
         builder.Property(x => x.StringValue).HasColumnName(DbConstants.ColumnNames.StringValue);

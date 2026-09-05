@@ -17,6 +17,7 @@ public class ThemeFieldVersionConfigurator : IEntityTypeConfiguration<ThemeField
         builder.Property(x => x.UserAcceptId).HasColumnName(DbConstants.ColumnNames.UserAcceptId);
         builder.Property(x => x.WriteDate).HasColumnName(DbConstants.ColumnNames.WriteDate).IsRequired();
         builder.Property(x => x.IsAccepted).HasColumnName(DbConstants.ColumnNames.IsAccepted).IsRequired();
+        builder.Property(x => x.IsChecked).HasColumnName(DbConstants.ColumnNames.IsChecked).IsRequired();
         builder.Property(x => x.Priority).HasColumnName(DbConstants.ColumnNames.Priority).IsRequired();
         builder.Property(x => x.Name).HasColumnName(DbConstants.ColumnNames.Name).IsRequired();
         builder.Property(x => x.IsDeleted).HasColumnName(DbConstants.ColumnNames.IsDeleted).IsRequired();

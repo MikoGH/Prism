@@ -17,6 +17,8 @@ public class ThemeVersion
 
     public bool IsAccepted { get; set; }
 
+    public bool IsChecked { get; set; }
+
     public string Name { get; set; }
 
     public bool IsDeleted { get; set; }

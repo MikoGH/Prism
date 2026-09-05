@@ -19,6 +19,8 @@ public class ThemeFieldVersion
 
     public bool IsAccepted { get; set; }
 
+    public bool IsChecked { get; set; }
+
     [Range(0, int.MaxValue, ErrorMessage = "Priority value should be 0 or higher")]
     public int Priority { get; set; }
 

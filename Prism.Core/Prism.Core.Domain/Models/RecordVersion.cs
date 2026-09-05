@@ -17,6 +17,8 @@ public class RecordVersion
 
     public bool IsAccepted { get; set; }
 
+    public bool IsChecked { get; set; }
+
     public string Name { get; set; }
 
     public string ImageUrl { get; set; }

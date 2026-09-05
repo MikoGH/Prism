@@ -69,6 +69,8 @@ public static class DbConstants
 
         public const string IsAccepted = "is_accepted";
 
+        public const string IsChecked = "is_checked";
+
         public const string IsDeleted = "is_deleted";
 
         public const string IntValue = "int_value";
