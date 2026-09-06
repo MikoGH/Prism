@@ -18,5 +18,7 @@ public interface IThemeFieldVersionRepository
 
     public Task<ThemeFieldVersion?> GetByIdAsync(Guid id, ThemeFieldVersionInclude? include = null, CancellationToken token = default);
 
+    public Task BatchAsync(IEnumerable<ThemeFieldVersion> themeFieldVersions, CancellationToken token = default);
+
     public Task<ThemeFieldVersion?> AddAsync(ThemeFieldVersion themeFieldVersion, CancellationToken token = default);
 }

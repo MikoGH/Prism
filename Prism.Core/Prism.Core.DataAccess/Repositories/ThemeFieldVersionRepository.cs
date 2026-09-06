@@ -98,6 +98,12 @@ public class ThemeFieldVersionRepository : IThemeFieldVersionRepository
         return query.FirstOrDefaultAsync(x => x.Id == id, token);
     }
 
+    public async Task BatchAsync(IEnumerable<ThemeFieldVersion> themeFieldVersions, CancellationToken token = default)
+    {
+        await _context.ThemeFieldVersions.AddRangeAsync(themeFieldVersions, token);
+        await _context.SaveChangesAsync(token);
+    }
+
     public async Task<ThemeFieldVersion?> AddAsync(ThemeFieldVersion themeFieldVersion, CancellationToken token = default)
     {
         var addedThemeFieldVersion = await _context.ThemeFieldVersions.AddAsync(themeFieldVersion, token);

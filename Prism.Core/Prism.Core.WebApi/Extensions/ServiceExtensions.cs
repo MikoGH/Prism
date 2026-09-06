@@ -26,7 +26,9 @@ public static class ServiceExtensions
     {
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IThemeValidator, ThemeValidator>();
+        services.AddScoped<IThemeFieldValidator, ThemeFieldValidator>();
         services.AddScoped<IThemeService, ThemeService>();
+        services.AddScoped<IThemeFieldService, ThemeFieldService>();
 
         return services;
     }
