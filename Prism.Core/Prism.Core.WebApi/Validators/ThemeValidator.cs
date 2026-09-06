@@ -16,10 +16,13 @@ public class ThemeValidator : IThemeValidator
             validationResult.AddErrorMessage("ThemeVersion.ThemeId and ThemeVersion.Theme.Id distinct.");
 
         if ((themeVersion.ThemeId != Guid.Empty) == (themeVersion.PreviousVersionId is null))
-            validationResult.AddErrorMessage("Theme and previous theme version existence distinct.");
+            validationResult.AddErrorMessage("Theme and PreviousVersion existence distinct.");
 
         if (!themeVersion.IsChecked && themeVersion.IsAccepted)
             validationResult.AddErrorMessage("ThemeVersion accepted but not checked.");
+
+        if (themeVersion.Name is null || themeVersion.Name == String.Empty)
+            validationResult.AddErrorMessage("ThemeVersion.Name is empty string.");
 
         return validationResult;
     }
