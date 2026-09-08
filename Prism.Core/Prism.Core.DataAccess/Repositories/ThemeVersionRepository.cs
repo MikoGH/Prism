@@ -1,13 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Monq.Core.MvcExtensions.Extensions;
+﻿using Flequery.Extensions;
+using Flequery.Models;
+using Microsoft.EntityFrameworkCore;
 using Monq.Core.Paging.Extensions;
-using Monq.Core.Paging.Models;
 using Prism.Core.DataAccess.Database;
-using Prism.Core.DataAccess.Extensions;
 using Prism.Core.Domain.Contracts;
 using Prism.Core.Domain.Models;
-using Prism.Core.Domain.Models.Filters;
-using Prism.Core.Domain.Models.Includes;
 using System.Linq.Expressions;
 
 namespace Prism.Core.DataAccess.Repositories;
@@ -21,76 +18,57 @@ public class ThemeVersionRepository : IThemeVersionRepository
         _context = context;
     }
 
-    public async Task<IEnumerable<ThemeVersion>> FilterAsync(ThemeVersionFilter filter, PagingModel? paging = null, ThemeVersionInclude? include = null, CancellationToken token = default)
+    public Task<PagedResponse<ThemeVersion>> FilterAsync(QueryRequest request, CancellationToken token = default)
     {
-        var query = _context.ThemeVersions
-            .AsNoTracking();
-
-        if (include is not null)
-            query = query.Include(include);
-
-        query = query.FilterBy(filter);
-
-        if (paging is not null)
-            query = query.WithPaging(paging, null, x => x.WriteDate);
-
-        var themeVersions = await query.ToListAsync(token);
-
-        return themeVersions;
+        return _context.ThemeVersions
+            .AsNoTracking()
+            .ApplyAsync(request, token);
     }
 
-    public async Task<IEnumerable<ThemeVersion>> FilterActualAsync(ThemeVersionFilter filter, PagingModel? paging = null, ThemeVersionInclude? include = null, CancellationToken token = default)
+    public Task<PagedResponse<ThemeVersion>> FilterActualAsync(QueryRequest request, CancellationToken token = default)
     {
-        var query = _context.ThemeVersions
-            .AsNoTracking();
-
-        if (include is not null)
-            query = query.Include(include);
-
-        query = query
-            .FilterBy(filter)
+        return _context.ThemeVersions
+            .AsNoTracking()
+            .ApplyIncluding(request.Includes)
+            .ApplyFiltering(request.Filters)
+            .ApplySearching(request.Search)
             .GroupBy(x => x.ThemeId)
-            .Select(x => x.OrderByDescending(y => y.WriteDate).First());
-
-        if (paging is not null)
-            query = query.WithPaging(paging, null, x => x.WriteDate);
-
-        var themeVersions = await query.ToListAsync(token);
-
-        return themeVersions;
+            .Select(x => x.OrderByDescending(y => y.WriteDate).First())
+            .ApplySorting(request.Sorting)
+            .ApplyPagingAsync(request.Paging, token);
     }
 
-    public Task<ThemeVersion?> FirstOrDefaultAsync(Expression<Func<ThemeVersion, bool>> predicate, ThemeVersionInclude? include = null, CancellationToken token = default)
+    public Task<ThemeVersion?> FirstOrDefaultAsync(Expression<Func<ThemeVersion, bool>> predicate, IncludeRequest? include = null, CancellationToken token = default)
     {
         var query = _context.ThemeVersions
             .AsNoTracking();
 
         if (include is not null)
-            query = query.Include(include);
+            query = query.ApplyIncluding(include);
 
         return query
             .OrderByDescending(y => y.WriteDate)
             .FirstOrDefaultAsync(predicate, token);
     }
 
-    public Task<ThemeVersion?> FirstOrDefaultActualAsync(Expression<Func<ThemeVersion, bool>> predicate, ThemeVersionInclude? include = null, CancellationToken token = default)
+    public Task<ThemeVersion?> FirstOrDefaultActualAsync(Expression<Func<ThemeVersion, bool>> predicate, IncludeRequest? include = null, CancellationToken token = default)
     {
         var query = _context.ThemeVersions
             .AsNoTracking();
 
         if (include is not null)
-            query = query.Include(include);
+            query = query.ApplyIncluding(include);
 
         return query.FirstOrDefaultAsync(predicate, token);
     }
 
-    public Task<ThemeVersion?> GetByIdAsync(Guid id, ThemeVersionInclude? include = null, CancellationToken token = default)
+    public Task<ThemeVersion?> GetByIdAsync(Guid id, IncludeRequest? include = null, CancellationToken token = default)
     {
         var query = _context.ThemeVersions
             .AsNoTracking();
 
         if (include is not null)
-            query = query.Include(include);
+            query = query.ApplyIncluding(include);
 
         return query.FirstOrDefaultAsync(x => x.Id == id, token);
     }

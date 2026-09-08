@@ -1,5 +1,4 @@
-﻿using Prism.Core.Domain.Models;
-using Prism.Core.Tests.Helpers;
+﻿using Prism.Core.Tests.Helpers;
 using Prism.Core.WebApi.Validators;
 
 namespace Prism.Core.Tests.Validators;

@@ -1,6 +1,4 @@
 ﻿using Prism.Core.Domain.Models;
-using Prism.Core.Domain.Models.Filters;
-using Prism.Core.Domain.Models.Includes;
 using Prism.Core.WebApi.Dtos.Theme;
 using Riok.Mapperly.Abstractions;
 
@@ -74,14 +72,6 @@ public partial class ThemeMapper
 
         return themeFieldVersion;
     }
-
-    public partial ThemeVersionFilter ToThemeVersionFilter(ThemeVersionFilterDto themeVersionFilterDto);
-
-    public partial ThemeFieldVersionFilter ToThemeFieldVersionFilter(ThemeFieldVersionFilterDto themeFieldVersionFilterDto);
-
-    public partial ThemeVersionInclude ToThemeVersionInclude(ThemeVersionIncludeDto themeVersionIncludeDto);
-
-    public partial ThemeFieldVersionInclude ToThemeFieldVersionInclude(ThemeFieldVersionIncludeDto themeFieldVersionIncludeDto);
 
     public partial ThemeVersionDto ToThemeVersionDto(ThemeVersionDto themeVersionDto);
 

@@ -1,9 +1,7 @@
-﻿using Monq.Core.Paging.Models;
+﻿using Flequery.Models;
 using Prism.Core.Domain.Contracts;
 using Prism.Core.Domain.Models;
 using Prism.Core.Domain.Models.Enums;
-using Prism.Core.Domain.Models.Filters;
-using Prism.Core.Domain.Models.Includes;
 using Prism.Core.WebApi.Exceptions;
 using Prism.Core.WebApi.Services.Contracts;
 using Prism.Core.WebApi.Validators.Contracts;
@@ -26,21 +24,21 @@ public class ThemeService : IThemeService
         _userRepository = userRepository;
     }
 
-    public async Task<IEnumerable<ThemeVersion>> FilterAsync(ThemeVersionFilter filter, PagingModel paging, ThemeVersionInclude include, CancellationToken token)
+    public async Task<PagedResponse<ThemeVersion>> FilterAsync(QueryRequest request, CancellationToken token)
     {
-        var themeVersions = await _themeVersionRepository.FilterAsync(filter, paging, include, token);
+        var themeVersions = await _themeVersionRepository.FilterAsync(request, token);
 
         return themeVersions;
     }
 
-    public async Task<IEnumerable<ThemeVersion>> FilterActualAsync(ThemeVersionFilter filter, PagingModel paging, ThemeVersionInclude include, CancellationToken token)
+    public async Task<PagedResponse<ThemeVersion>> FilterActualAsync(QueryRequest request, CancellationToken token)
     {
-        var themeVersions = await _themeVersionRepository.FilterActualAsync(filter, paging, include, token);
+        var themeVersions = await _themeVersionRepository.FilterActualAsync(request, token);
 
         return themeVersions;
     }
 
-    public Task<ThemeVersion?> GetByIdAsync(Guid id, ThemeVersionInclude include, CancellationToken token)
+    public Task<ThemeVersion?> GetByIdAsync(Guid id, IncludeRequest include, CancellationToken token)
     {
         return _themeVersionRepository.GetByIdAsync(id, include, token);
     }

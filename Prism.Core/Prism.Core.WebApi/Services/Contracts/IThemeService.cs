@@ -1,17 +1,15 @@
-﻿using Monq.Core.Paging.Models;
+﻿using Flequery.Models;
 using Prism.Core.Domain.Models;
-using Prism.Core.Domain.Models.Filters;
-using Prism.Core.Domain.Models.Includes;
 
 namespace Prism.Core.WebApi.Services.Contracts;
 
 public interface IThemeService
 {
-    public Task<IEnumerable<ThemeVersion>> FilterAsync(ThemeVersionFilter filter, PagingModel paging, ThemeVersionInclude include, CancellationToken token);
+    public Task<PagedResponse<ThemeVersion>> FilterAsync(QueryRequest request, CancellationToken token);
 
-    public Task<IEnumerable<ThemeVersion>> FilterActualAsync(ThemeVersionFilter filter, PagingModel paging, ThemeVersionInclude include, CancellationToken token);
+    public Task<PagedResponse<ThemeVersion>> FilterActualAsync(QueryRequest request, CancellationToken token);
 
-    public Task<ThemeVersion?> GetByIdAsync(Guid id, ThemeVersionInclude include, CancellationToken token);
+    public Task<ThemeVersion?> GetByIdAsync(Guid id, IncludeRequest include, CancellationToken token);
 
     public Task<ThemeVersion?> AddAsync(ThemeVersion themeVersion, CancellationToken token);
 

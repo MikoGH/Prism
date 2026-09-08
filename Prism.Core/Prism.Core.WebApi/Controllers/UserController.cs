@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Flequery.Extensions;
+using Flequery.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Monq.Core.Paging.Models;
 using Prism.Core.Domain.Contracts;
-using Prism.Core.Domain.Models.Filters;
 using Prism.Core.WebApi.Constants;
 using Prism.Core.WebApi.Dtos.User;
 using Prism.Core.WebApi.Mappers;
@@ -23,14 +23,15 @@ public class UserController : ControllerBase
         _userRepository = userRepository;
     }
 
-    public async Task<ActionResult<IEnumerable<UserDto>>> FilterUsersAsync(
-        [FromBody] PagingModel paging,
-        [FromBody] UserFilter filter,
-        CancellationToken token)
+    public async Task<ActionResult<IEnumerable<UserDto>>> FilterUsersAsync(QueryRequest request, [FromBody] FilterRequest filter, CancellationToken token)
     {
-        var users = await _userRepository.FilterAsync(filter, paging, token);
+        request.AddFilters(filter.Filters);
 
-        var userDtos = users.Select(x => _mapper.ToUserDto(x)).ToList();
+        var usersPagedResponse = await _userRepository.FilterAsync(request, token);
+
+        var userDtos = usersPagedResponse.Records.Select(x => _mapper.ToUserDto(x)).ToList();
+
+        HttpContext.SetPagingHeaders(usersPagedResponse.Headers);
 
         return Ok(userDtos);
     }

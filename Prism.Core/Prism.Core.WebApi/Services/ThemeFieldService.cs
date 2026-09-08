@@ -1,9 +1,9 @@
-﻿using Monq.Core.Paging.Models;
+﻿using Flequery.Extensions;
+using Flequery.Models;
+using Flequery.Models.Enums;
 using Prism.Core.Domain.Contracts;
 using Prism.Core.Domain.Models;
 using Prism.Core.Domain.Models.Enums;
-using Prism.Core.Domain.Models.Filters;
-using Prism.Core.Domain.Models.Includes;
 using Prism.Core.WebApi.Exceptions;
 using Prism.Core.WebApi.Services.Contracts;
 using Prism.Core.WebApi.Validators.Contracts;
@@ -26,21 +26,21 @@ public class ThemeFieldService : IThemeFieldService
         _userRepository = userRepository;
     }
 
-    public async Task<IEnumerable<ThemeFieldVersion>> FilterAsync(ThemeFieldVersionFilter filter, PagingModel paging, ThemeFieldVersionInclude include, CancellationToken token)
+    public async Task<PagedResponse<ThemeFieldVersion>> FilterAsync(QueryRequest request, CancellationToken token)
     {
-        var themeFieldVersions = await _themeFieldVersionRepository.FilterAsync(filter, paging, include, token);
+        var themeFieldVersions = await _themeFieldVersionRepository.FilterAsync(request, token);
 
         return themeFieldVersions;
     }
 
-    public async Task<IEnumerable<ThemeFieldVersion>> FilterActualAsync(ThemeFieldVersionFilter filter, PagingModel paging, ThemeFieldVersionInclude include, CancellationToken token)
+    public async Task<PagedResponse<ThemeFieldVersion>> FilterActualAsync(QueryRequest request, CancellationToken token)
     {
-        var themeFieldVersions = await _themeFieldVersionRepository.FilterActualAsync(filter, paging, include, token);
+        var themeFieldVersions = await _themeFieldVersionRepository.FilterActualAsync(request, token);
 
         return themeFieldVersions;
     }
 
-    public Task<ThemeFieldVersion?> GetByIdAsync(Guid id, ThemeFieldVersionInclude include, CancellationToken token)
+    public Task<ThemeFieldVersion?> GetByIdAsync(Guid id, IncludeRequest include, CancellationToken token)
     {
         return _themeFieldVersionRepository.GetByIdAsync(id, include, token);
     }
@@ -71,17 +71,16 @@ public class ThemeFieldService : IThemeFieldService
             .Except(newThemeFieldVersions)
             .ToList();
 
-        var filter = new ThemeFieldVersionFilter
-        {
-            Ids = themeFieldVersions
-                .Except(newThemeFieldVersions)
-                .Select(x => (Guid)x.PreviousVersionId!)
-                .ToList()
-        };
-        var lastThemeFieldVersions = await _themeFieldVersionRepository.FilterAsync(filter, token: token);
-        var lastThemeFieldVersionDct = lastThemeFieldVersions.ToDictionary(x => x.Id, x => x);
+        var filterIds = themeFieldVersions
+            .Except(newThemeFieldVersions)
+            .Select(x => (Guid)x.PreviousVersionId!)
+            .ToList();
+        var request = new QueryRequest();
+        request.AddFilter<ThemeFieldVersion, Guid>(x => x.Id, FilterOperator.In, filterIds);
+        var lastThemeFieldVersions = await _themeFieldVersionRepository.FilterAsync(request, token: token);
+        var lastThemeFieldVersionDct = lastThemeFieldVersions.Records.ToDictionary(x => x.Id, x => x);
 
-        if (lastThemeFieldVersions.Count() != existingThemeFieldVersions.Count)
+        if (lastThemeFieldVersions.Records.Count() != existingThemeFieldVersions.Count)
             throw new EntityNotFoundException("ThemeFieldVersion.PreviousVersionId does not exist.");
 
         var changedThemeFieldVersions = existingThemeFieldVersions
@@ -153,16 +152,16 @@ public class ThemeFieldService : IThemeFieldService
 
     private async Task<Dictionary<Guid, ThemeField>> GetExistingThemeFieldsAsync(IEnumerable<ThemeFieldVersion> themeFieldVersions, CancellationToken token)
     {
-        var existingThemeIds = themeFieldVersions
+        var existingThemeFieldIds = themeFieldVersions
             .Select(x => GetThemeFieldId(x))
             .Where(x => x != Guid.Empty)
             .ToList();
-        var filter = new ThemeFieldFilter
-        {
-            Ids = existingThemeIds
-        };
-        var existingThemeFields = await _themeFieldRepository.FilterAsync(filter, token: token);
-        return existingThemeFields.ToDictionary(x => x.Id, x => x);
+
+        var request = new QueryRequest();
+        request.AddFilter<ThemeField, Guid>(x => x.Id, FilterOperator.In, existingThemeFieldIds);
+        var existingThemeFields = await _themeFieldRepository.FilterAsync(request, token: token);
+
+        return existingThemeFields.Records.ToDictionary(x => x.Id, x => x);
     }
 
     private static Guid GetThemeFieldId(ThemeFieldVersion themeFieldVersion)

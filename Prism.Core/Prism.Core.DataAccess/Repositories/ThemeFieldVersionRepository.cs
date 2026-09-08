@@ -1,13 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Monq.Core.MvcExtensions.Extensions;
+﻿using Flequery.Extensions;
+using Flequery.Models;
+using Microsoft.EntityFrameworkCore;
 using Monq.Core.Paging.Extensions;
-using Monq.Core.Paging.Models;
 using Prism.Core.DataAccess.Database;
-using Prism.Core.DataAccess.Extensions;
 using Prism.Core.Domain.Contracts;
 using Prism.Core.Domain.Models;
-using Prism.Core.Domain.Models.Filters;
-using Prism.Core.Domain.Models.Includes;
 using System.Linq.Expressions;
 
 namespace Prism.Core.DataAccess.Repositories;
@@ -21,79 +18,59 @@ public class ThemeFieldVersionRepository : IThemeFieldVersionRepository
         _context = context;
     }
 
-    public async Task<IEnumerable<ThemeFieldVersion>> FilterAsync(ThemeFieldVersionFilter filter, PagingModel? paging = null, ThemeFieldVersionInclude? include = null, CancellationToken token = default)
+    public Task<PagedResponse<ThemeFieldVersion>> FilterAsync(QueryRequest request, CancellationToken token = default)
     {
-        var query = _context.ThemeFieldVersions
-            .AsNoTracking();
-
-        if (include is not null)
-            query = query.Include(include);
-
-        query = query.FilterBy(filter);
-
-        if (paging is not null)
-            query = query.WithPaging(paging, null, x => x.WriteDate);
-
-        var themeFieldVersions = await query.ToListAsync(token);
-
-        return themeFieldVersions;
+        return _context.ThemeFieldVersions
+            .AsNoTracking()
+            .ApplyAsync(request, token);
     }
 
-    public async Task<IEnumerable<ThemeFieldVersion>> FilterActualAsync(ThemeFieldVersionFilter filter, PagingModel? paging = null, ThemeFieldVersionInclude? include = null, CancellationToken token = default)
+    public Task<PagedResponse<ThemeFieldVersion>> FilterActualAsync(QueryRequest request, CancellationToken token = default)
     {
-        var query = _context.ThemeFieldVersions
-            .AsNoTracking();
-
-        if (include is not null)
-            query = query.Include(include);
-
-        query = query
-            .FilterBy(filter)
+        return _context.ThemeFieldVersions
+            .AsNoTracking()
+            .ApplyIncluding(request.Includes)
+            .ApplyFiltering(request.Filters)
+            .ApplySearching(request.Search)
             .GroupBy(x => x.ThemeFieldId)
-            .Select(x => x.OrderByDescending(y => y.WriteDate).First());
-
-        if (paging is not null)
-            query = query.WithPaging(paging, null, x => x.WriteDate);
-
-        var themeFieldVersions = await query.ToListAsync(token);
-
-        return themeFieldVersions;
+            .Select(x => x.OrderByDescending(y => y.WriteDate).First())
+            .ApplyPagingAsync(request.Paging, token);
     }
 
-    public Task<ThemeFieldVersion?> FirstOrDefaultAsync(Expression<Func<ThemeFieldVersion, bool>> predicate, ThemeFieldVersionInclude? include = null, CancellationToken token = default)
+    public Task<ThemeFieldVersion?> FirstOrDefaultAsync(Expression<Func<ThemeFieldVersion, bool>> predicate, IncludeRequest? include = null, CancellationToken token = default)
     {
 
         var query = _context.ThemeFieldVersions
             .AsNoTracking();
 
         if (include is not null)
-            query = query.Include(include);
+            query = query.ApplyIncluding(include);
 
         return query.FirstOrDefaultAsync(predicate, token);
     }
 
-    public Task<ThemeFieldVersion?> FirstOrDefaultActualAsync(Expression<Func<ThemeFieldVersion, bool>> predicate, ThemeFieldVersionInclude? include = null, CancellationToken token = default)
+    public Task<ThemeFieldVersion?> FirstOrDefaultActualAsync(Expression<Func<ThemeFieldVersion, bool>> predicate, IncludeRequest? include = null, CancellationToken token = default)
     {
 
         var query = _context.ThemeFieldVersions
             .AsNoTracking();
 
         if (include is not null)
-            query = query.Include(include);
+            query = query.ApplyIncluding(include);
 
         return query
             .OrderByDescending(x => x.WriteDate)
             .FirstOrDefaultAsync(predicate, token);
     }
 
-    public Task<ThemeFieldVersion?> GetByIdAsync(Guid id, ThemeFieldVersionInclude? include = null, CancellationToken token = default)
+    public Task<ThemeFieldVersion?> GetByIdAsync(Guid id, IncludeRequest? include = null, CancellationToken token = default)
     {
 
         var query = _context.ThemeFieldVersions
             .AsNoTracking();
 
         if (include is not null)
-            query = query.Include(include);
+            query = query.ApplyIncluding(include);
 
         return query.FirstOrDefaultAsync(x => x.Id == id, token);
     }

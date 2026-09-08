@@ -1,11 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Monq.Core.MvcExtensions.Extensions;
-using Monq.Core.Paging.Extensions;
-using Monq.Core.Paging.Models;
+﻿using Flequery.Extensions;
+using Flequery.Models;
+using Microsoft.EntityFrameworkCore;
 using Prism.Core.DataAccess.Database;
 using Prism.Core.Domain.Contracts;
 using Prism.Core.Domain.Models;
-using Prism.Core.Domain.Models.Filters;
 using System.Linq.Expressions;
 
 namespace Prism.Core.DataAccess.Repositories;
@@ -19,19 +17,11 @@ public class UserRepository : IUserRepository
         _context = context;
     }
 
-    public async Task<IEnumerable<User>> FilterAsync(UserFilter filter, PagingModel? paging = null, CancellationToken token = default)
+    public Task<PagedResponse<User>> FilterAsync(QueryRequest request, CancellationToken token = default)
     {
-        var query = _context.Users
+        return _context.Users
             .AsNoTracking()
-            .FilterBy(filter);
-
-        if (paging is not null)
-            query = query.WithPaging(paging, null, x => x.Name);
-
-        var users = await query
-            .ToListAsync(token);
-
-        return users;
+            .ApplyAsync(request, token);
     }
 
     public Task<User?> FirstOrDefaultAsync(Expression<Func<User, bool>> predicate, CancellationToken token = default)

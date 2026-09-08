@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Monq.Core.Paging.Models;
-using Prism.Core.Domain.Models.Filters;
+﻿using Flequery.Extensions;
+using Flequery.Models;
+using Microsoft.AspNetCore.Mvc;
 using Prism.Core.WebApi.Constants;
 using Prism.Core.WebApi.Dtos.Theme;
 using Prism.Core.WebApi.Mappers;
@@ -23,20 +23,21 @@ public class ThemeController : ControllerBase
         _themeFieldService = themeFieldService;
     }
 
-    //public async Task<ActionResult<ThemeFullDto>> GetAsync([FromQuery]PagingModel paging, [FromBody]ThemeQueryDto themeQuery, CancellationToken token)
-    //{
-    //    var themeVersionFilter = _mapper.ToThemeVersionFilter(themeQuery.ThemeVersionFilter);
-    //    var themeFieldVersionFilter= _mapper.ToThemeFieldVersionFilter(themeQuery.ThemeFieldVersionFilter);
-    //    var themeVersionInclude = _mapper.ToThemeVersionInclude(themeQuery.ThemeVersionInclude);
-    //    var themeFieldVersionInclude = _mapper.ToThemeFieldVersionInclude(themeQuery.ThemeFieldVersionInclude);
+    [HttpPost("filter")]
+    public async Task<ActionResult<ThemeFullDto>> FilterAsync(QueryRequest request, [FromBody] FilterRequest filters, CancellationToken token)
+    {
+        request.AddFilters(filters.Filters);
 
-    //    var themeVersion = _themeService.FilterAsync(themeVersionFilter, paging, themeVersionInclude, token);
-    //    var themeFieldPaging = new PagingModel
-    //    {
-    //        PerPage = PagingModel.ALL_ITEMS_PER_PAGE
-    //    };
-    //    var themeFieldVersion = _themeFieldService.FilterAsync(themeFieldVersionFilter, themeFieldPaging, themeFieldVersionInclude, token);
-    //}
+        //var themeVersionPagedResponse = _themeService.FilterAsync(request, token);
+        //var themeFieldRequest = request;  // TODO: clone
+
+        //themeFieldRequest.Paging.PerPage = -1;
+        //themeFieldRequest.Paging.Page = 1;
+        //themeFieldRequest.Paging.Skip = 0;
+        //var themeFieldVersion = _themeFieldService.FilterAsync(themeFieldRequest, token);
+
+        return Ok(new ThemeFullDto());
+    }
 
     [HttpPost("add")]
     public async Task<ActionResult> AddAsync([FromBody] AddThemeFullDto themeFullDto, CancellationToken token)

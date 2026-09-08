@@ -1,13 +1,12 @@
-﻿using Moq;
+﻿using Flequery.Models;
+using Moq;
 using Prism.Core.Domain.Contracts;
 using Prism.Core.Domain.Models;
-using Prism.Core.Domain.Models.Includes;
 using Prism.Core.Tests.Helpers;
 using Prism.Core.WebApi.Exceptions;
 using Prism.Core.WebApi.Models;
 using Prism.Core.WebApi.Services;
 using Prism.Core.WebApi.Validators.Contracts;
-using System.Linq.Expressions;
 
 namespace Prism.Core.Tests.Services;
 
@@ -37,7 +36,7 @@ public class ThemeServiceTests
 
         themeVersionRepositoryMock.Setup(x => x.GetByIdAsync(
             It.IsAny<Guid>(),
-            It.IsAny<ThemeVersionInclude>(),
+            It.IsAny<IncludeRequest>(),
             It.IsAny<CancellationToken>())
         ).ReturnsAsync(lastThemeVersion);
 
@@ -107,7 +106,7 @@ public class ThemeServiceTests
 
         themeVersionRepositoryMock.Setup(x => x.GetByIdAsync(
             It.IsAny<Guid>(),
-            It.IsAny<ThemeVersionInclude>(),
+            It.IsAny<IncludeRequest>(),
             It.IsAny<CancellationToken>())
         ).ReturnsAsync(lastThemeVersion);
 
@@ -168,7 +167,7 @@ public class ThemeServiceTests
 
         themeVersionRepositoryMock.Setup(x => x.GetByIdAsync(
             It.IsAny<Guid>(),
-            It.IsAny<ThemeVersionInclude>(),
+            It.IsAny<IncludeRequest>(),
             It.IsAny<CancellationToken>())
         ).ReturnsAsync(lastThemeVersion);
 
@@ -225,7 +224,7 @@ public class ThemeServiceTests
 
         themeVersionRepositoryMock.Setup(x => x.GetByIdAsync(
             It.IsAny<Guid>(),
-            It.IsAny<ThemeVersionInclude>(),
+            It.IsAny<IncludeRequest>(),
             It.IsAny<CancellationToken>())
         ).ReturnsAsync(lastThemeVersion);
 
@@ -274,7 +273,7 @@ public class ThemeServiceTests
 
         themeVersionRepositoryMock.Setup(x => x.GetByIdAsync(
             It.IsAny<Guid>(),
-            It.IsAny<ThemeVersionInclude>(),
+            It.IsAny<IncludeRequest>(),
             It.IsAny<CancellationToken>())
         ).ReturnsAsync(lastThemeVersion);
 
@@ -326,7 +325,7 @@ public class ThemeServiceTests
 
         themeVersionRepositoryMock.Setup(x => x.GetByIdAsync(
             It.IsAny<Guid>(),
-            It.IsAny<ThemeVersionInclude>(),
+            It.IsAny<IncludeRequest>(),
             It.IsAny<CancellationToken>())
         ).ReturnsAsync(lastThemeVersion);
 
@@ -367,7 +366,7 @@ public class ThemeServiceTests
 
         themeVersionRepositoryMock.Setup(x => x.GetByIdAsync(
             It.IsAny<Guid>(),
-            It.IsAny<ThemeVersionInclude>(),
+            It.IsAny<IncludeRequest>(),
             It.IsAny<CancellationToken>())
         ).ReturnsAsync(lastThemeVersion);
 
@@ -408,7 +407,7 @@ public class ThemeServiceTests
 
         themeVersionRepositoryMock.Setup(x => x.GetByIdAsync(
             It.IsAny<Guid>(),
-            It.IsAny<ThemeVersionInclude>(),
+            It.IsAny<IncludeRequest>(),
             It.IsAny<CancellationToken>())
         ).ReturnsAsync(lastThemeVersion);
 
@@ -449,7 +448,7 @@ public class ThemeServiceTests
 
         themeVersionRepositoryMock.Setup(x => x.GetByIdAsync(
             It.IsAny<Guid>(),
-            It.IsAny<ThemeVersionInclude>(),
+            It.IsAny<IncludeRequest>(),
             It.IsAny<CancellationToken>())
         ).ReturnsAsync(lastThemeVersion);
 
@@ -492,7 +491,7 @@ public class ThemeServiceTests
 
         themeVersionRepositoryMock.Setup(x => x.GetByIdAsync(
             It.IsAny<Guid>(),
-            It.IsAny<ThemeVersionInclude>(),
+            It.IsAny<IncludeRequest>(),
             It.IsAny<CancellationToken>())
         ).ReturnsAsync(lastThemeVersion);
 
@@ -524,7 +523,7 @@ public class ThemeServiceTests
 
         themeVersionRepositoryMock.Setup(x => x.GetByIdAsync(
             It.IsAny<Guid>(),
-            It.IsAny<ThemeVersionInclude>(),
+            It.IsAny<IncludeRequest>(),
             It.IsAny<CancellationToken>())
         ).ReturnsAsync((ThemeVersion?)null);
 

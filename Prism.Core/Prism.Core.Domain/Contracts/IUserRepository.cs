@@ -1,13 +1,12 @@
-﻿using Monq.Core.Paging.Models;
+﻿using Flequery.Models;
 using Prism.Core.Domain.Models;
-using Prism.Core.Domain.Models.Filters;
 using System.Linq.Expressions;
 
 namespace Prism.Core.Domain.Contracts;
 
 public interface IUserRepository
 {
-    public Task<IEnumerable<User>> FilterAsync(UserFilter filter, PagingModel? paging = null, CancellationToken token = default);
+    public Task<PagedResponse<User>> FilterAsync(QueryRequest request, CancellationToken token = default);
 
     public Task<User?> FirstOrDefaultAsync(Expression<Func<User, bool>> predicate, CancellationToken token = default);
 
