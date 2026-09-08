@@ -26,34 +26,22 @@ public class ThemeService : IThemeService
         _userRepository = userRepository;
     }
 
-    public async Task<IEnumerable<ThemeVersion>> FilterAsync(ThemeVersionFilter filter, PagingModel paging, CancellationToken token)
+    public async Task<IEnumerable<ThemeVersion>> FilterAsync(ThemeVersionFilter filter, PagingModel paging, ThemeVersionInclude include, CancellationToken token)
     {
-        var include = new ThemeVersionInclude
-        {
-            Theme = true
-        };
         var themeVersions = await _themeVersionRepository.FilterAsync(filter, paging, include, token);
 
         return themeVersions;
     }
 
-    public async Task<IEnumerable<ThemeVersion>> FilterActualAsync(ThemeVersionFilter filter, PagingModel paging, CancellationToken token)
+    public async Task<IEnumerable<ThemeVersion>> FilterActualAsync(ThemeVersionFilter filter, PagingModel paging, ThemeVersionInclude include, CancellationToken token)
     {
-        var include = new ThemeVersionInclude
-        {
-            Theme = true
-        };
         var themeVersions = await _themeVersionRepository.FilterActualAsync(filter, paging, include, token);
 
         return themeVersions;
     }
 
-    public Task<ThemeVersion?> GetByIdAsync(Guid id, CancellationToken token)
+    public Task<ThemeVersion?> GetByIdAsync(Guid id, ThemeVersionInclude include, CancellationToken token)
     {
-        var include = new ThemeVersionInclude
-        {
-            Theme = true
-        };
         return _themeVersionRepository.GetByIdAsync(id, include, token);
     }
 

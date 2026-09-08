@@ -26,34 +26,22 @@ public class ThemeFieldService : IThemeFieldService
         _userRepository = userRepository;
     }
 
-    public async Task<IEnumerable<ThemeFieldVersion>> FilterAsync(PagingModel paging, ThemeFieldVersionFilter filter, CancellationToken token)
+    public async Task<IEnumerable<ThemeFieldVersion>> FilterAsync(ThemeFieldVersionFilter filter, PagingModel paging, ThemeFieldVersionInclude include, CancellationToken token)
     {
-        var include = new ThemeFieldVersionInclude
-        {
-            ThemeField = true
-        };
         var themeFieldVersions = await _themeFieldVersionRepository.FilterAsync(filter, paging, include, token);
 
         return themeFieldVersions;
     }
 
-    public async Task<IEnumerable<ThemeFieldVersion>> FilterActualAsync(PagingModel paging, ThemeFieldVersionFilter filter, CancellationToken token)
+    public async Task<IEnumerable<ThemeFieldVersion>> FilterActualAsync(ThemeFieldVersionFilter filter, PagingModel paging, ThemeFieldVersionInclude include, CancellationToken token)
     {
-        var include = new ThemeFieldVersionInclude
-        {
-            ThemeField = true
-        };
         var themeFieldVersions = await _themeFieldVersionRepository.FilterActualAsync(filter, paging, include, token);
 
         return themeFieldVersions;
     }
 
-    public Task<ThemeFieldVersion?> GetByIdAsync(Guid id, CancellationToken token)
+    public Task<ThemeFieldVersion?> GetByIdAsync(Guid id, ThemeFieldVersionInclude include, CancellationToken token)
     {
-        var include = new ThemeFieldVersionInclude
-        {
-            ThemeField = true
-        };
         return _themeFieldVersionRepository.GetByIdAsync(id, include, token);
     }
 
