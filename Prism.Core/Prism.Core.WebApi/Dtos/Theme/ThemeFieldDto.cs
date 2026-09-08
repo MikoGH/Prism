@@ -2,9 +2,11 @@
 
 namespace Prism.Core.WebApi.Dtos.Theme;
 
-public class UpsertThemeFieldDto
+public class ThemeFieldDto
 {
-    public Guid? Id { get; set; }
+    public Guid Id { get; set; }
+
+    public Guid ThemeId { get; set; }
 
     public FieldType Type { get; set; }
 }

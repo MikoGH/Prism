@@ -1,4 +1,6 @@
 ﻿using Prism.Core.Domain.Models;
+using Prism.Core.Domain.Models.Filters;
+using Prism.Core.Domain.Models.Includes;
 using Prism.Core.WebApi.Dtos.Theme;
 using Riok.Mapperly.Abstractions;
 
@@ -7,29 +9,23 @@ namespace Prism.Core.WebApi.Mappers;
 [Mapper]
 public partial class ThemeMapper
 {
-    public Theme ToTheme(UpsertThemeDto themeDto)
-    {
-        var theme = new Theme();
-        if (themeDto.Id is not null)
-        {
-            theme.Id = (Guid)themeDto.Id;
-        }
-        return theme;
-    }
-
-    public ThemeVersion ToThemeVersion(UpsertThemeVersionDto themeVersionDto)
+    public ThemeVersion ToThemeVersion(AddThemeVersionDto themeVersionDto, Guid userId)
     {
         var themeVersion = new ThemeVersion()
         {
-            UserCreateId = themeVersionDto.UserId,
+            UserCreateId = userId,
             Name = themeVersionDto.Name,
             IsDeleted = false,
             IsAccepted = false
         };
 
-        if (themeVersionDto.Theme.Id is not null)
+        if (themeVersionDto.ThemeId is not null)
         {
-            themeVersion.ThemeId = (Guid)themeVersionDto.Theme.Id;
+            themeVersion.ThemeId = (Guid)themeVersionDto.ThemeId;
+        }
+        else
+        {
+            themeVersion.Theme = new Theme();
         }
 
         if (themeVersionDto.PreviousVersionId is not null && themeVersionDto.PreviousVersionId != Guid.Empty)
@@ -37,13 +33,10 @@ public partial class ThemeMapper
             themeVersion.PreviousVersionId = themeVersionDto.PreviousVersionId;
         }
 
-
-        themeVersion.Theme = ToTheme(themeVersionDto.Theme);
-
         return themeVersion;
     }
 
-    public ThemeField ToThemeField(UpsertThemeFieldDto themeFieldDto, Guid themeId)
+    public ThemeField ToThemeField(AddThemeFieldDto themeFieldDto, Guid themeId)
     {
         var themeField = new ThemeField()
         {
@@ -51,15 +44,10 @@ public partial class ThemeMapper
             ThemeId = themeId
         };
 
-        if (themeFieldDto.Id is not null)
-        {
-            themeField.Id = (Guid)themeFieldDto.Id;
-        }
-
         return themeField;
     }
 
-    public ThemeFieldVersion ToThemeFieldVersion(UpsertThemeFieldVersionDto themeFieldVersionDto, Guid userId, Guid themeId)
+    public ThemeFieldVersion ToThemeFieldVersion(AddThemeFieldVersionDto themeFieldVersionDto, Guid userId, Guid themeId)
     {
         var themeFieldVersion = new ThemeFieldVersion()
         {
@@ -70,9 +58,13 @@ public partial class ThemeMapper
             IsAccepted = false
         };
 
-        if (themeFieldVersionDto.ThemeField.Id is not null)
+        if (themeFieldVersionDto.ThemeFieldId is not null)
         {
-            themeFieldVersion.ThemeFieldId = (Guid)themeFieldVersionDto.ThemeField.Id;
+            themeFieldVersion.ThemeFieldId = (Guid)themeFieldVersionDto.ThemeFieldId;
+        }
+        else if (themeFieldVersionDto.ThemeField is not null)
+        {
+            themeFieldVersion.ThemeField = ToThemeField(themeFieldVersionDto.ThemeField, themeId);
         }
 
         if (themeFieldVersionDto.PreviousVersionId is not null && themeFieldVersionDto.PreviousVersionId != Guid.Empty)
@@ -80,8 +72,18 @@ public partial class ThemeMapper
             themeFieldVersion.PreviousVersionId = themeFieldVersionDto.PreviousVersionId;
         }
 
-        themeFieldVersion.ThemeField = ToThemeField(themeFieldVersionDto.ThemeField, themeId);
-
         return themeFieldVersion;
     }
+
+    public partial ThemeVersionFilter ToThemeVersionFilter(ThemeVersionFilterDto themeVersionFilterDto);
+
+    public partial ThemeFieldVersionFilter ToThemeFieldVersionFilter(ThemeFieldVersionFilterDto themeFieldVersionFilterDto);
+
+    public partial ThemeVersionInclude ToThemeVersionInclude(ThemeVersionIncludeDto themeVersionIncludeDto);
+
+    public partial ThemeFieldVersionInclude ToThemeFieldVersionInclude(ThemeFieldVersionIncludeDto themeFieldVersionIncludeDto);
+
+    public partial ThemeVersionDto ToThemeVersionDto(ThemeVersionDto themeVersionDto);
+
+    public partial ThemeFieldVersionDto ToThemeFieldVersionDto(ThemeFieldVersionDto themeFieldVersionDto);
 }

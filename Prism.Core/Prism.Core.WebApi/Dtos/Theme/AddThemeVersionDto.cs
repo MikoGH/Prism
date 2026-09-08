@@ -1,12 +1,10 @@
 ﻿namespace Prism.Core.WebApi.Dtos.Theme;
 
-public class UpsertThemeFieldVersionDto
+public class AddThemeVersionDto
 {
     public Guid? PreviousVersionId { get; set; }
 
-    public UpsertThemeFieldDto ThemeField { get; set; }
-
-    public int Priority { get; set; }
+    public Guid? ThemeId { get; set; }
 
     public string Name { get; set; }
 }

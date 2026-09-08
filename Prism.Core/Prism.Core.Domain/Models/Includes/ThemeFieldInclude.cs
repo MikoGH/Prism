@@ -2,5 +2,4 @@
 
 public class ThemeFieldInclude
 {
-    public bool Theme { get; set; }
 }
