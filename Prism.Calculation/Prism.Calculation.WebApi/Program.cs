@@ -1,3 +1,4 @@
+using Prism.Calculation.WebApi.Extensions;
 using Prism.Calculation.WebApi.Middlewares;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -16,10 +17,12 @@ builder.Services.AddControllers()
     });
 
 //builder.Services.AddPostgresDbContext(builder.Configuration.GetConnectionString(AppConstants.PostgresConnectionStringSectionName));
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddLogging();
+builder.Services
+    .AddEndpointsApiExplorer()
+    .AddLogging()
+    .AddServices()
+    .AddOptions(builder.Configuration);
 //builder.Services.AddRepositories();
-//builder.Services.AddServices();
 //builder.Services.AddMappers();
 
 var app = builder.Build();
@@ -33,7 +36,5 @@ app.MapControllers();
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
-
-//await app.MigrateDatabaseAsync();
 
 app.Run();

@@ -1,6 +1,7 @@
 ﻿using Prism.Core.DataAccess.Repositories;
 using Prism.Core.Domain.Contracts;
 using Prism.Core.WebApi.Mappers;
+using Prism.Core.WebApi.Models.Options;
 using Prism.Core.WebApi.Services;
 using Prism.Core.WebApi.Services.Contracts;
 using Prism.Core.WebApi.Validators;
@@ -30,6 +31,8 @@ public static class ServiceExtensions
         services.AddScoped<IThemeService, ThemeService>();
         services.AddScoped<IThemeFieldService, ThemeFieldService>();
 
+        services.AddScoped<ICalculationRequestProducer, CalculationRequestProducer>();
+
         return services;
     }
 
@@ -40,6 +43,14 @@ public static class ServiceExtensions
         services.AddScoped<UserMapper>();
         services.AddScoped<RateMapper>();
         services.AddScoped<ThemeMapper>();
+        services.AddScoped<CalculationRequestMapper>();
+
+        return services;
+    }
+
+    public static IServiceCollection AddOptions(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<KafkaOptions>(configuration.GetSection("Kafka"));
 
         return services;
     }

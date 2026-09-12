@@ -19,13 +19,14 @@ builder.Services.AddControllers()
         opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     });
 
-builder.Services.AddPostgresDbContext(builder.Configuration.GetConnectionString(AppConstants.PostgresConnectionStringSectionName));
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddLogging();
-builder.Services.AddRepositories();
-builder.Services.AddServices();
-builder.Services.AddMappers();
-builder.Services.AddPrismAuthentication(builder.Configuration.GetValue<string>(AppConstants.JwtSecretKeySectionName));
+builder.Services.AddPostgresDbContext(builder.Configuration.GetConnectionString(AppConstants.PostgresConnectionStringSectionName))
+    .AddEndpointsApiExplorer()
+    .AddLogging()
+    .AddRepositories()
+    .AddServices()
+    .AddMappers()
+    .AddOptions(builder.Configuration)
+    .AddPrismAuthentication(builder.Configuration.GetValue<string>(AppConstants.JwtSecretKeySectionName));
 
 var app = builder.Build();
 
