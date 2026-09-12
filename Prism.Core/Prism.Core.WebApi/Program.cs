@@ -1,3 +1,4 @@
+using Flequery.Helpers;
 using Prism.Core.WebApi.Constants;
 using Prism.Core.WebApi.Extensions;
 using Prism.Core.WebApi.Middlewares;
@@ -14,6 +15,8 @@ builder.Services.AddControllers()
         opt.JsonSerializerOptions.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
         opt.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
         opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        opt.JsonSerializerOptions.Converters.Add(new ObjectToClrConverter());
+        opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     });
 
 builder.Services.AddPostgresDbContext(builder.Configuration.GetConnectionString(AppConstants.PostgresConnectionStringSectionName));

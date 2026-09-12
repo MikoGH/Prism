@@ -7,6 +7,7 @@ public class ThemeVersionDto
     public Guid Id { get; set; }
 
     public Guid ThemeId { get; set; }
+    public ThemeDto? Theme { get; set; }
 
     public Guid? PreviousVersionId { get; set; }
     public ThemeVersionDto? PreviousVersion { get; set; }

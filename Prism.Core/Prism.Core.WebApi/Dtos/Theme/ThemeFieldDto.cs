@@ -9,4 +9,6 @@ public class ThemeFieldDto
     public Guid ThemeId { get; set; }
 
     public FieldType Type { get; set; }
+
+    public IEnumerable<ThemeFieldVersionDto>? ThemeFieldVersions { get; set; }
 }

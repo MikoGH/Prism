@@ -25,15 +25,72 @@ public class ThemeVersionRepository : IThemeVersionRepository
             .ApplyAsync(request, token);
     }
 
-    public Task<PagedResponse<ThemeVersion>> FilterActualAsync(QueryRequest request, CancellationToken token = default)
+    public async Task<PagedResponse<ThemeVersion>> FilterActualAsync(QueryRequest request, CancellationToken token = default)
+    {
+        var lastThemeVersionIds = _context.ThemeVersions
+            .AsNoTracking()
+            .GroupBy(x => x.ThemeId)
+            .Select(x => x
+                .OrderByDescending(y => y.WriteDate)
+                .Select(y => y.Id)
+                .First())
+            .ToList();
+
+        var themeVersionsQuery = _context.ThemeVersions
+            .AsNoTracking()
+            .Where(x => lastThemeVersionIds.Contains(x.Id))
+            .ApplyFiltering(request.Filters)
+            .ApplySearching(request.Search);
+
+        //var themeData = await themeVersionsQuery
+        //    .Select(x => new { x.Id, x.ThemeId })
+        //    .ToListAsync(token);
+        var themeVersionIds = themeVersionsQuery.Select(x => x.Id).ToList();
+        var themeIds = themeVersionsQuery.Select(x => x.ThemeId).ToList();
+
+        var lastThemeFieldVersionIds = _context.ThemeFieldVersions
+            .AsNoTracking()
+            .Include(x => x.ThemeField)
+            .Where(x => themeIds.Contains(x.ThemeField!.ThemeId))
+            .GroupBy(x => x.ThemeFieldId)
+            .Select(x => x
+                .OrderByDescending(y => y.WriteDate)
+                .Select(y => y.Id)
+                .First())
+            .ToList();
+        var themeFieldVersionsQuery = _context.ThemeFieldVersions
+            .AsNoTracking()
+            .Where(x => lastThemeFieldVersionIds.Contains(x.Id))
+            .ApplyFiltering(request.Filters)
+            .ApplySearching(request.Search);
+
+        //var fieldData = await themeFieldVersionsQuery
+        //    .Select(x => new { x.Id, x.ThemeFieldId })
+        //    .ToListAsync(token);
+        var themeFieldVersionIds = themeFieldVersionsQuery.Select(x => x.Id).ToList();
+        var themeFieldIds = themeFieldVersionsQuery.Select(x => x.ThemeFieldId).ToList();
+
+        return await _context.ThemeVersions
+            .AsNoTracking()
+            .Where(x => themeVersionIds.Contains(x.Id))
+            .Include(x => x.Theme)
+                .ThenInclude(x => x.ThemeFields
+                    .Where(themeField => themeFieldIds.Contains(themeField.Id)))
+                    .ThenInclude(x => x.ThemeFieldVersions
+                        .Where(themeFieldVersion => themeFieldVersionIds.Contains(themeFieldVersion.Id)))
+            .ApplySorting(request.Sorting)
+            .ApplyPagingAsync(request.Paging, token);
+    }
+
+    public Task<PagedResponse<ThemeVersion>> FilterActualAcceptedAsync(QueryRequest request, CancellationToken token = default)
     {
         return _context.ThemeVersions
-            .AsNoTracking()
             .ApplyIncluding(request.Includes)
-            .ApplyFiltering(request.Filters)
-            .ApplySearching(request.Search)
+            .Where(x => x.IsAccepted)
             .GroupBy(x => x.ThemeId)
             .Select(x => x.OrderByDescending(y => y.WriteDate).First())
+            .ApplyFiltering(request.Filters)
+            .ApplySearching(request.Search)
             .ApplySorting(request.Sorting)
             .ApplyPagingAsync(request.Paging, token);
     }

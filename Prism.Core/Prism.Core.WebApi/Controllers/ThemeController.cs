@@ -24,19 +24,15 @@ public class ThemeController : ControllerBase
     }
 
     [HttpPost("filter")]
-    public async Task<ActionResult<ThemeFullDto>> FilterAsync(QueryRequest request, [FromBody] FilterRequest filters, CancellationToken token)
+    public async Task<ActionResult<IEnumerable<ThemeVersionDto>>> FilterAsync(QueryRequest request, [FromBody] FilterRequest filters, CancellationToken token)
     {
         request.AddFilters(filters.Filters);
 
-        //var themeVersionPagedResponse = _themeService.FilterAsync(request, token);
-        //var themeFieldRequest = request;  // TODO: clone
+        var themeVersionPagedResponse = await _themeService.FilterActualAsync(request, token);
 
-        //themeFieldRequest.Paging.PerPage = -1;
-        //themeFieldRequest.Paging.Page = 1;
-        //themeFieldRequest.Paging.Skip = 0;
-        //var themeFieldVersion = _themeFieldService.FilterAsync(themeFieldRequest, token);
+        HttpContext.SetPagingHeaders(themeVersionPagedResponse.Headers);
 
-        return Ok(new ThemeFullDto());
+        return Ok(themeVersionPagedResponse.Records);
     }
 
     [HttpPost("add")]

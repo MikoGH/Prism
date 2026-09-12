@@ -48,7 +48,7 @@ public class ThemeFieldService : IThemeFieldService
     public async Task BatchAsync(IEnumerable<ThemeFieldVersion> themeFieldVersions, Guid themeId, CancellationToken token)
     {
         var existingThemeFields = await GetExistingThemeFieldsAsync(themeFieldVersions, token);
-        var userId = themeFieldVersions.Select(x => x.UserCreateId).Single();
+        var userId = themeFieldVersions.Select(x => x.UserCreateId).Distinct().Single();
         var user = await GetUserOrThrowAsync(userId, token);
 
         ApplyExistingThemeFields(themeFieldVersions, existingThemeFields);
@@ -123,16 +123,19 @@ public class ThemeFieldService : IThemeFieldService
             throw new Exception("Received distinct theme ids.");
 
         var validationResults = themeFieldVersions.Select(x => _themeFieldValidator.Validate(x)).ToList();
-        if (validationResults.Count != 0)
+        if (validationResults.Any(x => x.HasErrors))
         {
-            var errorMessages = validationResults.SelectMany(x => x.ErrorMessages).ToList();
+            var errorMessages = validationResults.Where(x => x.HasErrors).SelectMany(x => x.ErrorMessages).ToList();
             throw new ModelValidationException(errorMessages);
         }
     }
 
     private static bool CheckThemeFieldDistinct(IEnumerable<ThemeFieldVersion> themeFieldVersions)
     {
-        var themeFieldIds = themeFieldVersions.Select(x => x.ThemeFieldId).ToList();
+        var themeFieldIds = themeFieldVersions
+            .Select(x => x.ThemeFieldId)
+            .Where(x => x != Guid.Empty)
+            .ToList();
 
         return themeFieldIds.Distinct().Count() == themeFieldIds.Count;
     }
@@ -142,6 +145,7 @@ public class ThemeFieldService : IThemeFieldService
         var existingThemeId = themeFieldVersions
             .Where(x => x.ThemeField is not null)
             .Select(x => x.ThemeField!.ThemeId)
+            .Distinct()
             .SingleOrDefault();
 
         if (existingThemeId == Guid.Empty)

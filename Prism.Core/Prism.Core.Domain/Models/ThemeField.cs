@@ -10,4 +10,6 @@ public class ThemeField
     public Theme? Theme { get; set; }
 
     public FieldType Type { get; set; }
+
+    public IEnumerable<ThemeFieldVersion>? ThemeFieldVersions { get; set; }
 }
